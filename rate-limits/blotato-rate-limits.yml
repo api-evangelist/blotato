@@ -1,0 +1,53 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Blotato
+providerId: blotato
+created: '2026-06-25'
+modified: '2026-06-25'
+reconciled: false
+tags:
+- Social Media
+- Publishing
+- AI Content
+- Automation
+- Content Creation
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Blotato enforces per-user, per-endpoint rate limits expressed in requests per
+  minute. Media upload is limited to 10 requests per minute and publishing posts
+  to 30 requests per minute. Exceeding a limit returns HTTP 429. Underlying
+  social platforms also enforce their own publishing limits beyond Blotato's.
+notes: >-
+  Limits observed in Blotato's API reference and may change; verify current
+  per-endpoint values during reconciliation. Destination platforms impose
+  additional posting limits that Blotato cannot override.
+sources:
+- https://help.blotato.com/api/api-reference/upload-media-v2-media
+- https://help.blotato.com/api/api-reference/publish-post
+- https://help.blotato.com/api/start
+responseCodes:
+  throttled: 429
+limits:
+- name: Upload Media
+  scope: user
+  metric: requests
+  limit: 10 per minute
+  notes: Applies to POST /v2/media.
+- name: Publish Post
+  scope: user
+  metric: requests
+  limit: 30 per minute
+  notes: Applies to POST /v2/posts.
+policies:
+- name: Per-Endpoint Limits
+  description: Rate limits are applied per user and per endpoint, not as a single shared bucket.
+- name: Platform Limits
+  description: Destination social platforms enforce their own publishing limits in addition to Blotato's.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter on 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

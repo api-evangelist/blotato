@@ -1,0 +1,529 @@
+{
+  "item": [
+    {
+      "id": "b1a1c001-0001-4001-8001-000000000001",
+      "name": "Media",
+      "description": {
+        "content": "Upload media for use in posts.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1a1c001-0001-4001-8001-000000000002",
+          "name": "Upload media from a URL",
+          "request": {
+            "name": "Upload media from a URL",
+            "description": {
+              "content": "Uploads media by passing a publicly accessible URL or base64-encoded image data URL. Returns a Blotato-hosted media URL.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "media"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://example.com/image.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b1a1c001-0001-4001-8001-000000000003",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "media"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "blotato-api-key",
+                    "value": "{{blotatoApiKey}}"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://example.com/image.jpg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"https://media.blotato.com/uploads/abc123.jpg\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "b1a1c001-0002-4001-8001-000000000001",
+      "name": "Posts",
+      "description": {
+        "content": "Publish, schedule, and track posts.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1a1c001-0002-4001-8001-000000000002",
+          "name": "Publish a post",
+          "request": {
+            "name": "Publish a post",
+            "description": {
+              "content": "Publishes or schedules a post to a connected social account. Returns a postSubmissionId.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "posts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"Hello from Blotato\",\n      \"mediaUrls\": [\n        \"https://media.blotato.com/uploads/abc123.jpg\"\n      ],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b1a1c001-0002-4001-8001-000000000003",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "blotato-api-key",
+                    "value": "{{blotatoApiKey}}"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"Hello from Blotato\",\n      \"mediaUrls\": [],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"postSubmissionId\": \"<string>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b1a1c001-0002-4001-8001-000000000004",
+          "name": "Get post status",
+          "request": {
+            "name": "Get post status",
+            "description": {
+              "content": "Returns the publishing status for a post submission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "posts",
+                ":postSubmissionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "postSubmissionId",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null,
+            "body": {}
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "b1a1c001-0003-4001-8001-000000000001",
+      "name": "Accounts",
+      "description": {
+        "content": "User and connected social account lookup.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1a1c001-0003-4001-8001-000000000002",
+          "name": "List connected accounts",
+          "request": {
+            "name": "List connected accounts",
+            "description": {
+              "content": "Returns the authenticated user's connected social accounts and their accountId values.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "users",
+                "me",
+                "accounts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "platform",
+                  "value": "<string>",
+                  "disabled": true
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null,
+            "body": {}
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "b1a1c001-0004-4001-8001-000000000001",
+      "name": "Visuals",
+      "description": {
+        "content": "AI video and visual generation from templates.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b1a1c001-0004-4001-8001-000000000002",
+          "name": "List visual templates",
+          "request": {
+            "name": "List visual templates",
+            "description": {
+              "content": "Lists the available AI video and visual templates.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "videos",
+                "templates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null,
+            "body": {}
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b1a1c001-0004-4001-8001-000000000003",
+          "name": "Create a visual from a template",
+          "request": {
+            "name": "Create a visual from a template",
+            "description": {
+              "content": "Creates an AI video or visual creation from a template plus inputs. Poll the creation until done.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "videos",
+                "from-templates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"templateId\": \"<string>\",\n  \"inputs\": {\n    \"key_0\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b1a1c001-0004-4001-8001-000000000004",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "videos",
+                    "from-templates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "blotato-api-key",
+                    "value": "{{blotatoApiKey}}"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"templateId\": \"<string>\",\n  \"inputs\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"item\": {\n    \"id\": \"<string>\",\n    \"status\": \"queueing\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b1a1c001-0004-4001-8001-000000000005",
+          "name": "Get visual creation status",
+          "request": {
+            "name": "Get visual creation status",
+            "description": {
+              "content": "Returns the status of a visual creation; when done, includes mediaUrl or imageUrls.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "videos",
+                "creations",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null,
+            "body": {}
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://backend.blotato.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "blotato-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{blotatoApiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b1a1c001-0000-4001-8001-000000000000",
+    "name": "Blotato API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Upload media, publish and schedule posts to social platforms, generate AI visuals, and look up connected accounts via the Blotato API.\n\nContact Support:\n URL: https://help.blotato.com",
+      "type": "text/plain"
+    }
+  }
+}

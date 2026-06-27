@@ -1,0 +1,172 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blotato API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "blotato-api-key",
+      "value": "{{blotatoApiKey}}",
+      "in": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Media",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload media from a URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/media",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"url\": \"https://example.com/image.jpg\"\n}"
+            }
+          },
+          "docs": "Uploads media by passing a publicly accessible URL or base64-encoded image data URL. Returns a Blotato-hosted media URL."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Posts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish a post",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/posts",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"Hello from Blotato\",\n      \"mediaUrls\": [],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}"
+            }
+          },
+          "docs": "Publishes or schedules a post to a connected social account. Returns a postSubmissionId."
+        },
+        {
+          "info": {
+            "name": "Get post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/posts/:postSubmissionId"
+          },
+          "docs": "Returns the publishing status for a post submission."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me"
+          },
+          "docs": "Retrieves information about the authenticated user."
+        },
+        {
+          "info": {
+            "name": "List connected accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me/accounts"
+          },
+          "docs": "Returns the authenticated user's connected social accounts and their accountId values."
+        },
+        {
+          "info": {
+            "name": "List subaccounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me/accounts/:accountId/subaccounts"
+          },
+          "docs": "Returns subaccounts (for example LinkedIn or Facebook pages) for the given accountId."
+        },
+        {
+          "info": {
+            "name": "List Pinterest boards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/social/pinterest/boards"
+          },
+          "docs": "Lists the Pinterest boards available for a connected account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Visuals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List visual templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/videos/templates"
+          },
+          "docs": "Lists the available AI video and visual templates."
+        },
+        {
+          "info": {
+            "name": "Create a visual from a template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/videos/from-templates",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"templateId\": \"<string>\",\n  \"inputs\": {}\n}"
+            }
+          },
+          "docs": "Creates an AI video or visual creation from a template plus inputs. Poll the creation until done."
+        },
+        {
+          "info": {
+            "name": "Get visual creation status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/videos/creations/:id"
+          },
+          "docs": "Returns the status of a visual creation; when done, includes mediaUrl or imageUrls."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

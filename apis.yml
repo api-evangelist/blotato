@@ -1,0 +1,114 @@
+aid: blotato
+url: https://raw.githubusercontent.com/api-evangelist/blotato/refs/heads/main/apis.yml
+name: Blotato
+kind: company
+description: Blotato is an AI content-creation and social-media publishing platform.
+  Its REST API lets automation and AI-agent builders upload media, publish posts to
+  many platforms (TikTok, Instagram, YouTube, X/Twitter, LinkedIn, Facebook, Threads,
+  Bluesky, Pinterest), generate AI videos and visuals from templates, and track
+  publishing status, with an authenticated MCP server for AI agents.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Social Media
+- Publishing
+- AI Content
+- Automation
+- Content Creation
+created: '2026-06-25'
+modified: '2026-06-25'
+specificationVersion: '0.19'
+apis:
+- aid: blotato:blotato-media-upload-api
+  name: Blotato Media Upload API
+  tags:
+  - Media
+  - Upload
+  - Images
+  - Video
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  baseURL: https://backend.blotato.com/v2
+  properties:
+  - url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+    type: Documentation
+  - url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+    type: APIReference
+  - url: openapi/blotato-openapi.yml
+    type: OpenAPI
+  description: Uploads media to Blotato by passing a publicly accessible URL or
+    base64-encoded image data and returns a hosted media URL to use when publishing
+    posts. Supports files up to 200MB, with a presigned-upload flow for local files.
+- aid: blotato:blotato-posts-publishing-api
+  name: Blotato Posts Publishing API
+  tags:
+  - Posts
+  - Publishing
+  - Social Media
+  - Scheduling
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.blotato.com/api/api-reference/publish-post
+  baseURL: https://backend.blotato.com/v2
+  properties:
+  - url: https://help.blotato.com/api/api-reference/publish-post
+    type: Documentation
+  - url: https://help.blotato.com/api/api-reference/publish-post
+    type: APIReference
+  - url: openapi/blotato-openapi.yml
+    type: OpenAPI
+  description: Publishes or schedules posts to Twitter/X, Instagram, LinkedIn,
+    Facebook, TikTok, Pinterest, Threads, Bluesky, and YouTube with text, media,
+    and platform-specific options, returning a postSubmissionId whose status is
+    polled via a follow-up request.
+- aid: blotato:blotato-ai-content-api
+  name: Blotato AI Content API
+  tags:
+  - AI Content
+  - Video
+  - Visuals
+  - Templates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.blotato.com/api/start
+  baseURL: https://backend.blotato.com/v2
+  properties:
+  - url: https://help.blotato.com/api/start
+    type: Documentation
+  - url: openapi/blotato-openapi.yml
+    type: OpenAPI
+  description: Generates AI videos and visuals from templates - list available
+    templates, create a video or image creation from a template plus inputs, and
+    poll the creation until it is done to retrieve the resulting media or image URLs.
+- aid: blotato:blotato-accounts-api
+  name: Blotato Accounts API
+  tags:
+  - Accounts
+  - Users
+  - Connections
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.blotato.com/api/start
+  baseURL: https://backend.blotato.com/v2
+  properties:
+  - url: https://help.blotato.com/api/start
+    type: Documentation
+  - url: openapi/blotato-openapi.yml
+    type: OpenAPI
+  description: Retrieves the current user and their connected social accounts -
+    returning the accountId values (and LinkedIn/Facebook subaccounts and Pinterest
+    boards) required when publishing posts.
+common:
+- type: GitHubOrganization
+  url: https://github.com/Blotato-Inc
+- type: LinkedIn
+  url: https://www.linkedin.com/company/blotato
+- type: Website
+  url: https://www.blotato.com/
+- type: Documentation
+  url: https://help.blotato.com/api/start
+- type: Plans
+  url: plans/blotato-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/blotato-rate-limits.yml
+- type: FinOps
+  url: finops/blotato-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

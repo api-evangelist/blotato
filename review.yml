@@ -1,0 +1,66 @@
+aid: blotato
+name: Blotato
+review:
+  question: Does Blotato expose a documented public WebSocket API?
+  answer: false
+  date: '2026-06-25'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No streaming surface (WebSocket or HTTP Server-Sent Events) is documented
+    for the Blotato API. Asynchronous work - post publishing and AI visual
+    generation - is modeled as a submit-then-poll pattern over plain REST
+    (POST returns an id, then GET retrieves status), so no AsyncAPI document
+    was created.
+findings:
+  summary: |
+    Blotato does not publish a documented public WebSocket API. The Blotato
+    platform exposes a REST API under https://backend.blotato.com/v2,
+    authenticated with the blotato-api-key header. Long-running operations use
+    a request/poll pattern rather than streaming: publishing a post returns a
+    postSubmissionId polled via GET /posts/{postSubmissionId}, and creating an
+    AI visual returns a creation id polled via GET /videos/creations/{id}.
+    Blotato also offers an authenticated MCP server at https://mcp.blotato.com/mcp
+    for AI agents, but MCP is not a WebSocket REST API surface. No realtime,
+    bidirectional ws:// or wss:// endpoint is documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://backend.blotato.com/v2
+      documented: true
+    - protocol: MCP
+      scheme: https
+      baseURL: https://mcp.blotato.com/mcp
+      documented: true
+      note: Authenticated Model Context Protocol server for AI agents; not a WebSocket REST API.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Blotato's API reference as of the review date.
+  endpointsConfirmedRest:
+    - POST https://backend.blotato.com/v2/media
+    - POST https://backend.blotato.com/v2/posts
+    - GET  https://backend.blotato.com/v2/posts/{postSubmissionId}
+    - GET  https://backend.blotato.com/v2/users/me
+    - GET  https://backend.blotato.com/v2/users/me/accounts
+    - GET  https://backend.blotato.com/v2/users/me/accounts/{accountId}/subaccounts
+    - GET  https://backend.blotato.com/v2/social/pinterest/boards
+    - GET  https://backend.blotato.com/v2/videos/templates
+    - POST https://backend.blotato.com/v2/videos/from-templates
+    - GET  https://backend.blotato.com/v2/videos/creations/{id}
+sources:
+  - url: https://help.blotato.com/api/start
+    type: Documentation
+    note: Lists REST base URL https://backend.blotato.com/v2 and MCP server https://mcp.blotato.com/mcp; no WebSocket mentioned.
+  - url: https://help.blotato.com/api/api-reference/publish-post
+    type: APIReference
+    note: Publishing returns a postSubmissionId polled over REST; no streaming.
+  - url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+    type: APIReference
+    note: Media upload is a plain REST POST returning a hosted media URL.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or SSE protocol surface exists. Asynchronous operations use a
+    REST submit-then-poll pattern, so no AsyncAPI document was authored.
