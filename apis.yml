@@ -95,6 +95,10 @@ apis:
     returning the accountId values (and LinkedIn/Facebook subaccounts and Pinterest
     boards) required when publishing posts.
 common:
+- type: DomainSecurity
+  url: security/blotato-domain-security.yml
+- type: Authentication
+  url: authentication/blotato-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/Blotato-Inc
 - type: LinkedIn
@@ -109,6 +113,8 @@ common:
   url: rate-limits/blotato-rate-limits.yml
 - type: FinOps
   url: finops/blotato-finops.yml
+- url: https://www.blotato.com/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

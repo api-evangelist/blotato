@@ -1,0 +1,17 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/blotato-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: blotatoApiKey
+  type: apiKey
+  in: header
+  parameter: blotato-api-key
+  description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header
+    on every request. Keys may include trailing '=' padding that must be preserved.
+  sources:
+  - openapi/blotato-openapi.yml
