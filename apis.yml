@@ -95,6 +95,8 @@ apis:
     returning the accountId values (and LinkedIn/Facebook subaccounts and Pinterest
     boards) required when publishing posts.
 common:
+- type: AgenticAccess
+  url: agentic-access/blotato-agentic-access.yml
 - type: DomainSecurity
   url: security/blotato-domain-security.yml
 - type: Authentication
