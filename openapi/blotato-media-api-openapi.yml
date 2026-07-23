@@ -1,0 +1,64 @@
+openapi: 3.0.1
+info:
+  title: Blotato Accounts Media API
+  description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
+  termsOfService: https://www.blotato.com/terms
+  contact:
+    name: Blotato Support
+    url: https://help.blotato.com
+  version: '2.0'
+servers:
+- url: https://backend.blotato.com/v2
+  description: Blotato REST API v2
+security:
+- blotatoApiKey: []
+tags:
+- name: Media
+  description: Upload media for use in posts.
+paths:
+  /media:
+    post:
+      operationId: uploadMedia
+      tags:
+      - Media
+      summary: Upload media from a URL
+      description: Uploads media to Blotato by passing a publicly accessible URL or a base64-encoded image data URL. Returns a Blotato-hosted media URL to use in the mediaUrls of a post. Files up to 200MB are supported.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadMediaRequest'
+      responses:
+        '200':
+          description: Media uploaded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadMediaResponse'
+        '401':
+          description: Missing or invalid API key.
+        '429':
+          description: Rate limit exceeded.
+components:
+  schemas:
+    UploadMediaRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: A publicly accessible media URL, or a base64-encoded image data URL, to upload to Blotato.
+    UploadMediaResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The Blotato-hosted media URL to reference in a post.
+  securitySchemes:
+    blotatoApiKey:
+      type: apiKey
+      in: header
+      name: blotato-api-key
+      description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header on every request. Keys may include trailing '=' padding that must be preserved.

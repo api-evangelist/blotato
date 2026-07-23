@@ -1,0 +1,115 @@
+openapi: 3.0.1
+info:
+  title: Blotato Accounts Visuals API
+  description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
+  termsOfService: https://www.blotato.com/terms
+  contact:
+    name: Blotato Support
+    url: https://help.blotato.com
+  version: '2.0'
+servers:
+- url: https://backend.blotato.com/v2
+  description: Blotato REST API v2
+security:
+- blotatoApiKey: []
+tags:
+- name: Visuals
+  description: AI video and visual generation from templates.
+paths:
+  /videos/templates:
+    get:
+      operationId: listVisualTemplates
+      tags:
+      - Visuals
+      summary: List visual templates
+      description: Lists the available AI video and visual templates, returning the templateId values and the inputs each template accepts.
+      responses:
+        '200':
+          description: Available templates.
+        '401':
+          description: Missing or invalid API key.
+  /videos/from-templates:
+    post:
+      operationId: createVisual
+      tags:
+      - Visuals
+      summary: Create a visual from a template
+      description: Creates an AI video or visual creation from a template plus inputs. Returns a creation id and an initial status; poll GET /videos/creations/{id} until the creation is done.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVisualRequest'
+      responses:
+        '201':
+          description: Visual creation queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVisualResponse'
+        '401':
+          description: Missing or invalid API key.
+        '422':
+          description: Validation error.
+  /videos/creations/{id}:
+    get:
+      operationId: getVisualStatus
+      tags:
+      - Visuals
+      summary: Get visual creation status
+      description: Returns the status of a visual creation. When done, the response includes a mediaUrl for videos or imageUrls for images and carousels.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Visual creation status.
+        '401':
+          description: Missing or invalid API key.
+        '404':
+          description: Creation not found.
+components:
+  schemas:
+    CreateVisualResponse:
+      type: object
+      properties:
+        item:
+          type: object
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              description: Initial creation status, for example queueing.
+    CreateVisualRequest:
+      type: object
+      required:
+      - templateId
+      - inputs
+      properties:
+        templateId:
+          type: string
+          description: A template id from GET /videos/templates.
+        inputs:
+          type: object
+          description: Template-specific inputs.
+        prompt:
+          type: string
+        render:
+          type: boolean
+        isDraft:
+          type: boolean
+        title:
+          type: string
+        useBrandKit:
+          type: boolean
+  securitySchemes:
+    blotatoApiKey:
+      type: apiKey
+      in: header
+      name: blotato-api-key
+      description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header on every request. Keys may include trailing '=' padding that must be preserved.

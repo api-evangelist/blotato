@@ -1,0 +1,85 @@
+openapi: 3.0.1
+info:
+  title: Blotato Accounts API
+  description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
+  termsOfService: https://www.blotato.com/terms
+  contact:
+    name: Blotato Support
+    url: https://help.blotato.com
+  version: '2.0'
+servers:
+- url: https://backend.blotato.com/v2
+  description: Blotato REST API v2
+security:
+- blotatoApiKey: []
+tags:
+- name: Accounts
+  description: User and connected social account lookup.
+paths:
+  /users/me:
+    get:
+      operationId: getCurrentUser
+      tags:
+      - Accounts
+      summary: Get current user
+      description: Retrieves information about the authenticated user.
+      responses:
+        '200':
+          description: Current user.
+        '401':
+          description: Missing or invalid API key.
+  /users/me/accounts:
+    get:
+      operationId: listAccounts
+      tags:
+      - Accounts
+      summary: List connected accounts
+      description: Returns the authenticated user's connected social accounts, optionally filtered by platform. Provides the accountId values used when publishing.
+      parameters:
+      - name: platform
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Connected accounts.
+        '401':
+          description: Missing or invalid API key.
+  /users/me/accounts/{accountId}/subaccounts:
+    get:
+      operationId: listSubaccounts
+      tags:
+      - Accounts
+      summary: List subaccounts
+      description: Returns subaccounts for an account (for example LinkedIn or Facebook pages) associated with the given accountId.
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Subaccounts.
+        '401':
+          description: Missing or invalid API key.
+  /social/pinterest/boards:
+    get:
+      operationId: listPinterestBoards
+      tags:
+      - Accounts
+      summary: List Pinterest boards
+      description: Lists the Pinterest boards available for a connected account.
+      responses:
+        '200':
+          description: Pinterest boards.
+        '401':
+          description: Missing or invalid API key.
+components:
+  securitySchemes:
+    blotatoApiKey:
+      type: apiKey
+      in: header
+      name: blotato-api-key
+      description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header on every request. Keys may include trailing '=' padding that must be preserved.

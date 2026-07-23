@@ -1,0 +1,219 @@
+openapi: 3.0.1
+info:
+  title: Blotato Accounts Posts API
+  description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
+  termsOfService: https://www.blotato.com/terms
+  contact:
+    name: Blotato Support
+    url: https://help.blotato.com
+  version: '2.0'
+servers:
+- url: https://backend.blotato.com/v2
+  description: Blotato REST API v2
+security:
+- blotatoApiKey: []
+tags:
+- name: Posts
+  description: Publish, schedule, and track posts.
+paths:
+  /posts:
+    post:
+      operationId: publishPost
+      tags:
+      - Posts
+      summary: Publish a post
+      description: Publishes or schedules a post to a connected social account. Returns a postSubmissionId; poll GET /posts/{postSubmissionId} to track status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishPostRequest'
+      responses:
+        '201':
+          description: Post submission accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishPostResponse'
+        '401':
+          description: Missing or invalid API key.
+        '422':
+          description: Validation error.
+        '429':
+          description: Rate limit exceeded.
+        '500':
+          description: Server error.
+  /posts/{postSubmissionId}:
+    get:
+      operationId: getPostStatus
+      tags:
+      - Posts
+      summary: Get post status
+      description: Returns the publishing status for a post submission.
+      parameters:
+      - name: postSubmissionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Post submission status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostStatusResponse'
+        '401':
+          description: Missing or invalid API key.
+        '404':
+          description: Post submission not found.
+components:
+  schemas:
+    PublishPostResponse:
+      type: object
+      properties:
+        postSubmissionId:
+          type: string
+          description: Identifier used to poll publishing status.
+    PostTarget:
+      type: object
+      required:
+      - targetType
+      description: Platform-specific target. The targetType selects the platform; some platforms require additional fields (for example linkedin/facebook pageId, pinterest boardId, youtube title/privacyStatus, tiktok privacy and content-disclosure flags).
+      properties:
+        targetType:
+          type: string
+          enum:
+          - twitter
+          - instagram
+          - linkedin
+          - facebook
+          - tiktok
+          - pinterest
+          - threads
+          - bluesky
+          - youtube
+          - webhook
+        pageId:
+          type: string
+          description: Required for linkedin and facebook page targets.
+        boardId:
+          type: string
+          description: Required for pinterest targets.
+        mediaType:
+          type: string
+          description: Optional content variant, for example reel or story.
+        title:
+          type: string
+          description: Title (youtube, pinterest).
+        privacyStatus:
+          type: string
+          description: Required for youtube targets.
+        privacyLevel:
+          type: string
+          description: Required for tiktok targets.
+        url:
+          type: string
+          description: Required for webhook targets.
+    Slot:
+      type: object
+      required:
+      - id
+      - time
+      properties:
+        id:
+          type: string
+        time:
+          type: string
+    PublishPostRequest:
+      type: object
+      required:
+      - post
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+        scheduledTime:
+          type: string
+          format: date-time
+          description: ISO 8601 time at which to publish the post (optional).
+        useNextFreeSlot:
+          type: boolean
+          description: Publish at the next free scheduling slot (optional).
+        slot:
+          $ref: '#/components/schemas/Slot'
+    Post:
+      type: object
+      required:
+      - accountId
+      - content
+      - target
+      properties:
+        accountId:
+          type: string
+          description: The connected account id, from GET /users/me/accounts.
+        content:
+          $ref: '#/components/schemas/PostContent'
+        target:
+          $ref: '#/components/schemas/PostTarget'
+    PostStatusResponse:
+      type: object
+      properties:
+        postSubmissionId:
+          type: string
+        status:
+          type: string
+          description: Current publishing status of the submission.
+    PostContent:
+      type: object
+      required:
+      - text
+      - mediaUrls
+      - platform
+      properties:
+        text:
+          type: string
+          description: The post text/caption.
+        mediaUrls:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+          description: Hosted media URLs (for example from POST /media).
+        platform:
+          type: string
+          description: The destination platform for this content.
+          enum:
+          - twitter
+          - instagram
+          - linkedin
+          - facebook
+          - tiktok
+          - pinterest
+          - threads
+          - bluesky
+          - youtube
+          - other
+        additionalPosts:
+          type: array
+          maxItems: 10
+          description: Additional posts for threads/carousels.
+          items:
+            type: object
+            required:
+            - text
+            - mediaUrls
+            properties:
+              text:
+                type: string
+              mediaUrls:
+                type: array
+                maxItems: 20
+                items:
+                  type: string
+  securitySchemes:
+    blotatoApiKey:
+      type: apiKey
+      in: header
+      name: blotato-api-key
+      description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header on every request. Keys may include trailing '=' padding that must be preserved.
