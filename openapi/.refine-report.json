@@ -1,0 +1,20 @@
+{
+  "provider": "blotato",
+  "sources": [
+    "blotato-accounts-api-openapi.yml",
+    "blotato-media-api-openapi.yml",
+    "blotato-posts-api-openapi.yml",
+    "blotato-visuals-api-openapi.yml"
+  ],
+  "outputs": [
+    "blotato-accounts-api-openapi.yml",
+    "blotato-media-api-openapi.yml",
+    "blotato-posts-api-openapi.yml",
+    "blotato-visuals-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
