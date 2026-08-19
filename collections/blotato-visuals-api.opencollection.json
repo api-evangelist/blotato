@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blotato Accounts Visuals API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "blotato-api-key",
+      "value": "{{blotato-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visuals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List visual templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/videos/templates"
+          },
+          "docs": "Lists the available AI video and visual templates, returning the templateId values and the inputs each template accepts."
+        },
+        {
+          "info": {
+            "name": "Create a visual from a template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/videos/from-templates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates an AI video or visual creation from a template plus inputs. Returns a creation id and an initial status; poll GET /videos/creations/{id} until the creation is done."
+        },
+        {
+          "info": {
+            "name": "Get visual creation status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/videos/creations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the status of a visual creation. When done, the response includes a mediaUrl for videos or imageUrls for images and carousels."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

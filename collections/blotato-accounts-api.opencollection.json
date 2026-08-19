@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blotato Accounts API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "blotato-api-key",
+      "value": "{{blotato-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me"
+          },
+          "docs": "Retrieves information about the authenticated user."
+        },
+        {
+          "info": {
+            "name": "List connected accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me/accounts",
+            "params": [
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the authenticated user's connected social accounts, optionally filtered by platform. Provides the accountId values used when publishing."
+        },
+        {
+          "info": {
+            "name": "List subaccounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/users/me/accounts/:accountId/subaccounts",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns subaccounts for an account (for example LinkedIn or Facebook pages) associated with the given accountId."
+        },
+        {
+          "info": {
+            "name": "List Pinterest boards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/social/pinterest/boards"
+          },
+          "docs": "Lists the Pinterest boards available for a connected account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

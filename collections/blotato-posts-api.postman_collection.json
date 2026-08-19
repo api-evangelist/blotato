@@ -1,0 +1,528 @@
+{
+  "item": [
+    {
+      "id": "1b8a7490-c233-43f6-b718-db599feeb403",
+      "name": "Posts",
+      "description": {
+        "content": "Publish, schedule, and track posts.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f8c9c81a-bf07-4847-8af6-8d55c4e9bbb5",
+          "name": "Publish a post",
+          "request": {
+            "name": "Publish a post",
+            "description": {
+              "content": "Publishes or schedules a post to a connected social account. Returns a postSubmissionId; poll GET /posts/{postSubmissionId} to track status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "posts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1114c609-b709-47d0-82bf-bfb00818761d",
+              "name": "Post submission accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"postSubmissionId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "965ebd26-1dad-489c-a564-fa82889882a2",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "30b8b9d2-6c8c-4ec9-9825-933e0213b71a",
+              "name": "Validation error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "85ae1f97-4712-42aa-8379-6777775cc47d",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2c2077b8-9388-48f4-8a8b-f58c43224cda",
+              "name": "Server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"post\": {\n    \"accountId\": \"<string>\",\n    \"content\": {\n      \"text\": \"<string>\",\n      \"mediaUrls\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"platform\": \"<string>\",\n      \"additionalPosts\": [\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        },\n        {\n          \"text\": \"<string>\",\n          \"mediaUrls\": [\n            \"<string>\",\n            \"<string>\"\n          ]\n        }\n      ]\n    },\n    \"target\": {\n      \"targetType\": \"<string>\",\n      \"pageId\": \"<string>\",\n      \"boardId\": \"<string>\",\n      \"mediaType\": \"<string>\",\n      \"title\": \"<string>\",\n      \"privacyStatus\": \"<string>\",\n      \"privacyLevel\": \"<string>\",\n      \"url\": \"<string>\"\n    }\n  },\n  \"scheduledTime\": \"<dateTime>\",\n  \"useNextFreeSlot\": \"<boolean>\",\n  \"slot\": {\n    \"id\": \"<string>\",\n    \"time\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bb3923fb-864c-47bb-b32a-38204c4a1f0b",
+          "name": "Get post status",
+          "request": {
+            "name": "Get post status",
+            "description": {
+              "content": "Returns the publishing status for a post submission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "posts",
+                ":postSubmissionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "postSubmissionId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a14320f8-d72f-4f6d-a807-bd9b8204bdcf",
+              "name": "Post submission status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts",
+                    ":postSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "postSubmissionId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"postSubmissionId\": \"string\",\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a24563ed-2cfa-4f68-9ad3-11d848353073",
+              "name": "Missing or invalid API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts",
+                    ":postSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "postSubmissionId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6ca6fcea-8a6e-4db1-82f7-eedcce430b05",
+              "name": "Post submission not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "posts",
+                    ":postSubmissionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "postSubmissionId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "blotato-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://backend.blotato.com/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "blotato-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9e051a70-fe8d-4a74-bc80-150d0d094be2",
+    "name": "Blotato Accounts Posts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.\n\nContact Support:\n Name: Blotato Support",
+      "type": "text/plain"
+    }
+  }
+}

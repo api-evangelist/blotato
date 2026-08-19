@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blotato Accounts Media API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "blotato-api-key",
+      "value": "{{blotato-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Media",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload media from a URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/media",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Uploads media to Blotato by passing a publicly accessible URL or a base64-encoded image data URL. Returns a Blotato-hosted media URL to use in the mediaUrls of a post. Files up to 200MB are supported."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

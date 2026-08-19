@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blotato Accounts Posts API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "blotato-api-key",
+      "value": "{{blotato-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Posts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish a post",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://backend.blotato.com/v2/posts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Publishes or schedules a post to a connected social account. Returns a postSubmissionId; poll GET /posts/{postSubmissionId} to track status."
+        },
+        {
+          "info": {
+            "name": "Get post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://backend.blotato.com/v2/posts/:postSubmissionId",
+            "params": [
+              {
+                "name": "postSubmissionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the publishing status for a post submission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
