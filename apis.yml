@@ -22,6 +22,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/blotato.png
 tags:
+- Social-Media
+- Publishing
+- AI content
+- Automation
+- Content Creation
+tags_raw:
 - Social Media
 - Publishing
 - AI Content
@@ -37,6 +43,8 @@ apis:
   humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
   baseURL: https://backend.blotato.com/v2
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
