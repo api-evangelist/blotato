@@ -7,6 +7,18 @@ description: Blotato is an AI content-creation and social-media publishing platf
   many platforms (TikTok, Instagram, YouTube, X/Twitter, LinkedIn, Facebook, Threads,
   Bluesky, Pinterest), generate AI videos and visuals from templates, and track
   publishing status, with an authenticated MCP server for AI agents.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
