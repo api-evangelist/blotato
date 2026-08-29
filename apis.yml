@@ -132,6 +132,9 @@ apis:
   - type: Documentation
     url: https://help.blotato.com/api/start
 common:
+- type: CapabilityMap
+  url: capabilities/blotato-capability-edges.yml
+  name: Blotato Business Capability Map
 - type: AgenticAccess
   url: agentic-access/blotato-agentic-access.yml
 - type: DomainSecurity
