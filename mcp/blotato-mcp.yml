@@ -1,0 +1,21 @@
+generated: '2026-09-11'
+method: probed
+source: https://mcp.blotato.com/mcp
+status: gated
+server:
+  name: blotato
+  transport: http
+  url: https://mcp.blotato.com/mcp
+deployment:
+  mode: remote
+  endpoint: https://mcp.blotato.com/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-09-11'
+  source: docs-check 2026-09-12 (endpoint found in the provider's own documentation, then probed)
+  probe_why: RFC 9728 challenge on the MCP path only
+tools_note: No tool list captured. This manifest records a PROBED, reachable endpoint only; anonymous
+  tools/list was auth-gated or the server requires an initialize handshake this reachability probe does
+  not perform. Run signals/audit_mcp_authorship.py --probe to enumerate tools and settle platform-vs-provider
+  authorship. Do NOT derive a tool list from the OpenAPI and store it here -- that is a candidate manifest,
+  and it belongs under an X-MCPServerCandidate pointer.
