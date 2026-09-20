@@ -1,0 +1,47 @@
+# ESTIMATES computed by API Evangelist — not published by the provider. See `note` and `replace_by`.
+generated: '2026-09-20'
+method: estimated
+estimator: 'planning/api-economics/estimate_prices.py — design: ESTIMATION.md'
+note: ESTIMATES, not quotes. Computed by API Evangelist from the prices this provider publishes on https://www.blotato.com/pricing
+  (transcribed in plans/blotato-plans-pricing.yml). Nothing here overrides a published price. Each estimate
+  names the figure it came from, the formula, any assumption, and the field the provider can publish to
+  replace it — publish that and the estimate is retired.
+audience_of_source_pricing: business-product
+pricing_basis: tiered-subscription
+estimate_count: 2
+estimates:
+- kind: entry_cost
+  grade: A
+  grade_meaning: quoted — the page states this figure
+  usd_per_month: 29.0
+  meaning: the cheapest published paid tier — a floor on the cost of getting in, NOT the price of the
+    API alone
+  inputs:
+  - file: plans/blotato-plans-pricing.yml
+    plan: Starter
+    price_text: $29 /mo
+  replace_by: 'API Commons Plans — plans[].entries[] with type: fee, a numeric `price`, `timeFrame: month`
+    and the tier that includes API access stated in `elements`'
+- kind: marginal_cost
+  grade: C
+  grade_meaning: depends on a stated prior — see `priors`
+  usd: 0.0011188272
+  per: request
+  formula: 'C1 capacity-implied: monthly price / (rps x 2,592,000) / utilisation'
+  inputs:
+  - file: plans/blotato-plans-pricing.yml
+    plan: Starter
+    price_text: $29 /mo
+  - file: rate-limits/
+    published_ceiling: 1 req/s
+  replace_by: 'API Commons Plans — plans[].entries[] with type: metered, `metric` (request | token | transaction
+    | message), `unit` and a numeric `price`; and FinOps `primaryUnit` + `meters[]`'
+  range_usd:
+  - 0.000223765
+  - 0.0111883
+  priors:
+    utilisation:
+      low: 0.001
+      point: 0.01
+      high: 0.05
+    note: share of the published ceiling actually used
