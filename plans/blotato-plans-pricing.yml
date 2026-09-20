@@ -10,6 +10,10 @@ provenance:
   grounding: every price_text was found verbatim in the fetched page text
 audience: business-product
 pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: keyword-prefilter
+  read: '2026-09-20'
 published: true
 note: Tiered subscription page with 7-day free trial (excludes API access). Annual plans stated to save
   ~17% with promo of +5,000 AI credits ($30 value) and 5 free Claude Skills; no annual price shown.
