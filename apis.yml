@@ -132,6 +132,8 @@ apis:
   - type: Documentation
     url: https://help.blotato.com/api/start
 common:
+- type: Pricing
+  url: https://www.blotato.com/pricing
 - type: CapabilityMap
   url: capabilities/blotato-capability-edges.yml
   name: Blotato Business Capability Map

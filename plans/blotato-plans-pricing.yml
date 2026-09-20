@@ -1,130 +1,41 @@
-specification: API Commons Plans
-specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
-provider: Blotato
-providerId: blotato
-created: '2026-06-25'
-modified: '2026-06-25'
-reconciled: false
-tags:
-- Social Media
-- Publishing
-- AI Content
-- Automation
-- Content Creation
-- Plans
-description: >-
-  Blotato sells flat monthly (or discounted annual) subscription tiers -
-  Starter, Creator, and Agency - rather than usage-metered API pricing. Writing
-  is unlimited on every plan; AI credits power image and video generation and
-  scale with the tier. API access is unlocked on a paid subscription; generating
-  an API key ends a free trial. Exact per-tier API entitlements are not fully
-  reconciled here.
-notes: >-
-  Prices and credit allotments observed on the Blotato pricing page and may
-  change. Annual plans advertise roughly 17% savings plus bonus AI credits and
-  Claude Skills. Confirm which paid tier(s) grant API access during reconciliation.
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://www.blotato.com/pricing
 sources:
 - https://www.blotato.com/pricing
-- https://help.blotato.com/api/start
-- https://help.blotato.com/settings/api-keys
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T124425
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+published: true
+note: Tiered subscription page with 7-day free trial (excludes API access). Annual plans stated to save
+  ~17% with promo of +5,000 AI credits ($30 value) and 5 free Claude Skills; no annual price shown.
+plan_count: 3
+currency: USD
 plans:
-- id: blotato-starter
-  name: Starter
-  type: flat
-  description: >-
-    Entry subscription with unlimited writing and a monthly AI credit allotment
-    for image and video generation.
-  entries:
-  - label: Starter Subscription
-    name: starter
-    type: flat
-    metric: subscription
-    limit: -1
-    timeFrame: month
-    geo: global
-    unit: 1
-    price: $29/month
-    userMultiplied: false
-  - label: AI Credits
-    name: ai_credits
-    type: usage
-    metric: credits
-    limit: 1250
-    timeFrame: month
-    geo: global
-    unit: 1250
-    price: included
-    userMultiplied: false
-  elements:
-  - name: Unlimited Writing
-  - name: Media Upload
-  - name: Posts Publishing
-  - name: AI Content
-- id: blotato-creator
-  name: Creator
-  type: flat
-  description: >-
-    Most popular subscription with a larger monthly AI credit allotment for
-    higher-volume content creation and publishing.
-  entries:
-  - label: Creator Subscription
-    name: creator
-    type: flat
-    metric: subscription
-    limit: -1
-    timeFrame: month
-    geo: global
-    unit: 1
-    price: $97/month
-    userMultiplied: false
-  - label: AI Credits
-    name: ai_credits
-    type: usage
-    metric: credits
-    limit: 5000
-    timeFrame: month
-    geo: global
-    unit: 5000
-    price: included
-    userMultiplied: false
-  elements:
-  - name: Unlimited Writing
-  - name: Media Upload
-  - name: Posts Publishing
-  - name: AI Content
-- id: blotato-agency
-  name: Agency
-  type: flat
-  description: >-
-    Highest subscription tier with the largest AI credit allotment for agencies
-    managing many accounts and high publishing volume.
-  entries:
-  - label: Agency Subscription
-    name: agency
-    type: flat
-    metric: subscription
-    limit: -1
-    timeFrame: month
-    geo: global
-    unit: 1
-    price: $499/month
-    userMultiplied: false
-  - label: AI Credits
-    name: ai_credits
-    type: usage
-    metric: credits
-    limit: 28000
-    timeFrame: month
-    geo: global
-    unit: 28000
-    price: included
-    userMultiplied: false
-  elements:
-  - name: Unlimited Writing
-  - name: Media Upload
-  - name: Posts Publishing
-  - name: AI Content
-maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+- name: Starter
+  price_text: $29 /mo
+  price: 29
+  currency: USD
+  period: month
+  included_quota: 1,250 AI credits per month (AI images + videos), 20 social media accounts, 1,000 active
+    contacts per month (DMs + comment replies), unlimited AI writing
+- name: Creator
+  price_text: $97 /mo
+  price: 97
+  currency: USD
+  period: month
+  included_quota: Everything in Starter, 5,000 AI credits per month (AI images, videos, voice), 40 social
+    media accounts, 6,000 active contacts per month
+- name: Agency
+  price_text: $499 /mo
+  price: 499
+  currency: USD
+  period: month
+  included_quota: Everything in Creator, 28,000 AI credits per month, 15,000 active contacts per month,
+    dedicated video processing and support
+rate_limit_statements:
+- Up to 900 TikTok posts/month
