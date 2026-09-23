@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Blotato Accounts Posts API
+  title: Blotato Posts API
   description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
   termsOfService: https://www.blotato.com/terms
   contact:
@@ -70,100 +70,6 @@ paths:
           description: Post submission not found.
 components:
   schemas:
-    PublishPostResponse:
-      type: object
-      properties:
-        postSubmissionId:
-          type: string
-          description: Identifier used to poll publishing status.
-    PostTarget:
-      type: object
-      required:
-      - targetType
-      description: Platform-specific target. The targetType selects the platform; some platforms require additional fields (for example linkedin/facebook pageId, pinterest boardId, youtube title/privacyStatus, tiktok privacy and content-disclosure flags).
-      properties:
-        targetType:
-          type: string
-          enum:
-          - twitter
-          - instagram
-          - linkedin
-          - facebook
-          - tiktok
-          - pinterest
-          - threads
-          - bluesky
-          - youtube
-          - webhook
-        pageId:
-          type: string
-          description: Required for linkedin and facebook page targets.
-        boardId:
-          type: string
-          description: Required for pinterest targets.
-        mediaType:
-          type: string
-          description: Optional content variant, for example reel or story.
-        title:
-          type: string
-          description: Title (youtube, pinterest).
-        privacyStatus:
-          type: string
-          description: Required for youtube targets.
-        privacyLevel:
-          type: string
-          description: Required for tiktok targets.
-        url:
-          type: string
-          description: Required for webhook targets.
-    Slot:
-      type: object
-      required:
-      - id
-      - time
-      properties:
-        id:
-          type: string
-        time:
-          type: string
-    PublishPostRequest:
-      type: object
-      required:
-      - post
-      properties:
-        post:
-          $ref: '#/components/schemas/Post'
-        scheduledTime:
-          type: string
-          format: date-time
-          description: ISO 8601 time at which to publish the post (optional).
-        useNextFreeSlot:
-          type: boolean
-          description: Publish at the next free scheduling slot (optional).
-        slot:
-          $ref: '#/components/schemas/Slot'
-    Post:
-      type: object
-      required:
-      - accountId
-      - content
-      - target
-      properties:
-        accountId:
-          type: string
-          description: The connected account id, from GET /users/me/accounts.
-        content:
-          $ref: '#/components/schemas/PostContent'
-        target:
-          $ref: '#/components/schemas/PostTarget'
-    PostStatusResponse:
-      type: object
-      properties:
-        postSubmissionId:
-          type: string
-        status:
-          type: string
-          description: Current publishing status of the submission.
     PostContent:
       type: object
       required:
@@ -211,6 +117,100 @@ components:
                 maxItems: 20
                 items:
                   type: string
+    PostStatusResponse:
+      type: object
+      properties:
+        postSubmissionId:
+          type: string
+        status:
+          type: string
+          description: Current publishing status of the submission.
+    PublishPostResponse:
+      type: object
+      properties:
+        postSubmissionId:
+          type: string
+          description: Identifier used to poll publishing status.
+    Slot:
+      type: object
+      required:
+      - id
+      - time
+      properties:
+        id:
+          type: string
+        time:
+          type: string
+    PublishPostRequest:
+      type: object
+      required:
+      - post
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+        scheduledTime:
+          type: string
+          format: date-time
+          description: ISO 8601 time at which to publish the post (optional).
+        useNextFreeSlot:
+          type: boolean
+          description: Publish at the next free scheduling slot (optional).
+        slot:
+          $ref: '#/components/schemas/Slot'
+    PostTarget:
+      type: object
+      required:
+      - targetType
+      description: Platform-specific target. The targetType selects the platform; some platforms require additional fields (for example linkedin/facebook pageId, pinterest boardId, youtube title/privacyStatus, tiktok privacy and content-disclosure flags).
+      properties:
+        targetType:
+          type: string
+          enum:
+          - twitter
+          - instagram
+          - linkedin
+          - facebook
+          - tiktok
+          - pinterest
+          - threads
+          - bluesky
+          - youtube
+          - webhook
+        pageId:
+          type: string
+          description: Required for linkedin and facebook page targets.
+        boardId:
+          type: string
+          description: Required for pinterest targets.
+        mediaType:
+          type: string
+          description: Optional content variant, for example reel or story.
+        title:
+          type: string
+          description: Title (youtube, pinterest).
+        privacyStatus:
+          type: string
+          description: Required for youtube targets.
+        privacyLevel:
+          type: string
+          description: Required for tiktok targets.
+        url:
+          type: string
+          description: Required for webhook targets.
+    Post:
+      type: object
+      required:
+      - accountId
+      - content
+      - target
+      properties:
+        accountId:
+          type: string
+          description: The connected account id, from GET /users/me/accounts.
+        content:
+          $ref: '#/components/schemas/PostContent'
+        target:
+          $ref: '#/components/schemas/PostTarget'
   securitySchemes:
     blotatoApiKey:
       type: apiKey

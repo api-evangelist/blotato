@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Blotato Accounts Visuals API
+  title: Blotato Visuals API
   description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
   termsOfService: https://www.blotato.com/terms
   contact:
@@ -74,17 +74,6 @@ paths:
           description: Creation not found.
 components:
   schemas:
-    CreateVisualResponse:
-      type: object
-      properties:
-        item:
-          type: object
-          properties:
-            id:
-              type: string
-            status:
-              type: string
-              description: Initial creation status, for example queueing.
     CreateVisualRequest:
       type: object
       required:
@@ -107,6 +96,17 @@ components:
           type: string
         useBrandKit:
           type: boolean
+    CreateVisualResponse:
+      type: object
+      properties:
+        item:
+          type: object
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              description: Initial creation status, for example queueing.
   securitySchemes:
     blotatoApiKey:
       type: apiKey

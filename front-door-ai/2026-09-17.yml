@@ -1,0 +1,33 @@
+# Front Door AI Index — blotato — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: blotato
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.blotato.com
+  final_host: www.blotato.com
+  ownership: own
+  owner: blotato
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 87
+  host_score: 87
+  density: 22.89
+  words: 3800
+  tiers:
+    agentic: 35
+    core: 22
+    model: 30
+  ambiguous: 36
+  top_terms:
+    agent: 27
+    AI: 22
+    Claude: 20
+    MCP: 17
+    AI agent: 12
+    ChatGPT: 10
+    automation: 9
+    prompts: 5
+    fine-tune: 1
