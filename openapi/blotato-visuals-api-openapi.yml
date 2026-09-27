@@ -74,6 +74,17 @@ paths:
           description: Creation not found.
 components:
   schemas:
+    CreateVisualResponse:
+      type: object
+      properties:
+        item:
+          type: object
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              description: Initial creation status, for example queueing.
     CreateVisualRequest:
       type: object
       required:
@@ -96,17 +107,6 @@ components:
           type: string
         useBrandKit:
           type: boolean
-    CreateVisualResponse:
-      type: object
-      properties:
-        item:
-          type: object
-          properties:
-            id:
-              type: string
-            status:
-              type: string
-              description: Initial creation status, for example queueing.
   securitySchemes:
     blotatoApiKey:
       type: apiKey

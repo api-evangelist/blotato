@@ -37,7 +37,7 @@ x-docs-platform: gitbook
 x-docs-platform-confidence: high
 x-docs-platform-checked: 2026-09-20
 tags:
-- Social-Media
+- Social Media
 - Publishing
 - AI content
 - Automation
@@ -48,6 +48,7 @@ tags_raw:
 - AI Content
 - Automation
 - Content Creation
+- Social-Media
 created: '2026-06-25'
 modified: '2026-06-25'
 specificationVersion: '0.23'
