@@ -70,22 +70,66 @@ paths:
           description: Post submission not found.
 components:
   schemas:
-    PublishPostRequest:
+    PostTarget:
       type: object
       required:
-      - post
+      - targetType
+      description: Platform-specific target. The targetType selects the platform; some platforms require additional fields (for example linkedin/facebook pageId, pinterest boardId, youtube title/privacyStatus, tiktok privacy and content-disclosure flags).
       properties:
-        post:
-          $ref: '#/components/schemas/Post'
-        scheduledTime:
+        targetType:
           type: string
-          format: date-time
-          description: ISO 8601 time at which to publish the post (optional).
-        useNextFreeSlot:
-          type: boolean
-          description: Publish at the next free scheduling slot (optional).
-        slot:
-          $ref: '#/components/schemas/Slot'
+          enum:
+          - twitter
+          - instagram
+          - linkedin
+          - facebook
+          - tiktok
+          - pinterest
+          - threads
+          - bluesky
+          - youtube
+          - webhook
+        pageId:
+          type: string
+          description: Required for linkedin and facebook page targets.
+        boardId:
+          type: string
+          description: Required for pinterest targets.
+        mediaType:
+          type: string
+          description: Optional content variant, for example reel or story.
+        title:
+          type: string
+          description: Title (youtube, pinterest).
+        privacyStatus:
+          type: string
+          description: Required for youtube targets.
+        privacyLevel:
+          type: string
+          description: Required for tiktok targets.
+        url:
+          type: string
+          description: Required for webhook targets.
+    PublishPostResponse:
+      type: object
+      properties:
+        postSubmissionId:
+          type: string
+          description: Identifier used to poll publishing status.
+    Post:
+      type: object
+      required:
+      - accountId
+      - content
+      - target
+      properties:
+        accountId:
+          type: string
+          description: The connected account id, from GET /users/me/accounts.
+        content:
+          $ref: '#/components/schemas/PostContent'
+        target:
+          $ref: '#/components/schemas/PostTarget'
     PostContent:
       type: object
       required:
@@ -133,26 +177,22 @@ components:
                 maxItems: 20
                 items:
                   type: string
-    PublishPostResponse:
-      type: object
-      properties:
-        postSubmissionId:
-          type: string
-          description: Identifier used to poll publishing status.
-    Post:
+    PublishPostRequest:
       type: object
       required:
-      - accountId
-      - content
-      - target
+      - post
       properties:
-        accountId:
+        post:
+          $ref: '#/components/schemas/Post'
+        scheduledTime:
           type: string
-          description: The connected account id, from GET /users/me/accounts.
-        content:
-          $ref: '#/components/schemas/PostContent'
-        target:
-          $ref: '#/components/schemas/PostTarget'
+          format: date-time
+          description: ISO 8601 time at which to publish the post (optional).
+        useNextFreeSlot:
+          type: boolean
+          description: Publish at the next free scheduling slot (optional).
+        slot:
+          $ref: '#/components/schemas/Slot'
     Slot:
       type: object
       required:
@@ -171,46 +211,6 @@ components:
         status:
           type: string
           description: Current publishing status of the submission.
-    PostTarget:
-      type: object
-      required:
-      - targetType
-      description: Platform-specific target. The targetType selects the platform; some platforms require additional fields (for example linkedin/facebook pageId, pinterest boardId, youtube title/privacyStatus, tiktok privacy and content-disclosure flags).
-      properties:
-        targetType:
-          type: string
-          enum:
-          - twitter
-          - instagram
-          - linkedin
-          - facebook
-          - tiktok
-          - pinterest
-          - threads
-          - bluesky
-          - youtube
-          - webhook
-        pageId:
-          type: string
-          description: Required for linkedin and facebook page targets.
-        boardId:
-          type: string
-          description: Required for pinterest targets.
-        mediaType:
-          type: string
-          description: Optional content variant, for example reel or story.
-        title:
-          type: string
-          description: Title (youtube, pinterest).
-        privacyStatus:
-          type: string
-          description: Required for youtube targets.
-        privacyLevel:
-          type: string
-          description: Required for tiktok targets.
-        url:
-          type: string
-          description: Required for webhook targets.
   securitySchemes:
     blotatoApiKey:
       type: apiKey
