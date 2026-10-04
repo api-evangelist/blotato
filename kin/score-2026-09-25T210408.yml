@@ -1,30 +1,28 @@
-# Kin Score artifact — blotato — 2026-08-27T140727
+# Kin Score artifact — blotato — 2026-09-25T210408
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: blotato
-  schema_version: 0.15.1
-  scored_at: '2026-08-27'
-  run_ts: 2026-08-27T140727
-  composite: 38.7
+  schema_version: 0.23.0
+  scored_at: '2026-09-25'
+  run_ts: 2026-09-25T210408
+  composite: 38.9
   band: thin
   facets:
-    discoverability: 74.1
-    contract_quality: 56.3
-    governance: 0.0
-    operational_transparency: 23.7
-    developer_ergonomics: 31.0
-    commercial_clarity: 39.5
+    discoverability: 68.3
+    contract_quality: 50.7
     contract_governance: 0.0
-    access_clarity: 39.5
+    operational_transparency: 34.2
+    developer_ergonomics: 31.0
+    access_clarity: 50.0
   agent_readiness:
-    score: 19.8
-    band: agent-aware
+    score: 32.0
+    band: agent-ready
     dimensions:
       spec_presence: true
       agentic_access: derived
       reversibility_documented: false
-      mcp_server: false
+      mcp_server: verified
       auth_clarity: bearer
       idempotency: false
       error_semantics: false
@@ -37,10 +35,17 @@ kin_score:
       agent_card: false
       dry_run_mode: false
       delegated_identity: false
-      protected_resource_metadata: false
+      protected_resource_metadata: verified
       dynamic_client_registration: false
       agentic_commerce: false
+  regulatory:
+    applies: true
+    regime: Horizontal (data, software, accessibility, platform)
+    regime_id: horizontal
+    score: 11.8
+    matched_via: fallback
   provenance:
+    mcp: first-party
     agentic_access: derived
     contracts:
       total: 4
