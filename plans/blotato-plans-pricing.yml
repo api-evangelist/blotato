@@ -43,3 +43,31 @@ plans:
     dedicated video processing and support
 rate_limit_statements:
 - Up to 900 TikTok posts/month
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - subscription
+  units: []
+  plans:
+  - name: Starter
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Creator
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Agency
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
