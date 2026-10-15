@@ -47,7 +47,7 @@
     published: '2026-01-29T21:35:18.630Z'
     matched_on: publisher-email
     builder: provider (package published from the provider's own domain)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: blotato-pipedream
   label: Pipedream
@@ -73,5 +73,5 @@
     actions: true
     sources: false
     builder: Pipedream repo (component)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
