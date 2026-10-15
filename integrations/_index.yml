@@ -19,6 +19,59 @@
     registered_name: com.blotato/mcp
     register_id: com.blotato/mcp
     detected_by: sweep-agent-tools.py
-    detected: '2026-10-14'
+    detected: '2026-10-15'
   status: not-a-workflow
+  arazzo: null
+- slug: blotato-n8n
+  label: n8n
+  partner: n8n
+  partner_name: n8n
+  type: marketplace
+  marketplace: n8n-community
+  channel: open-source-node
+  evidence: https://www.npmjs.com/package/@blotato/n8n-nodes-blotato
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: n8n community nodes (npm keyword n8n-community-node-package)
+    spec_file: null
+    role: ipaas-connector:n8n-community
+    registered_name: '@blotato/n8n-nodes-blotato'
+    matched_domain: blotato.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    package: '@blotato/n8n-nodes-blotato'
+    version: 1.0.10
+    published: '2026-01-29T21:35:18.630Z'
+    matched_on: publisher-email
+    builder: provider (package published from the provider's own domain)
+  status: pending-generation
+  arazzo: null
+- slug: blotato-pipedream
+  label: Pipedream
+  partner: pipedream
+  partner_name: Pipedream
+  type: marketplace
+  marketplace: pipedream-components
+  channel: open-source-node
+  evidence: https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/blotato
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Pipedream components (PipedreamHQ/pipedream components/)
+    spec_file: null
+    role: ipaas-connector:pipedream
+    registered_name: blotato
+    matched_domain: blotato.com
+    matched_by: domain
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    app_slug: blotato
+    actions: true
+    sources: false
+    builder: Pipedream repo (component)
+  status: pending-generation
   arazzo: null
