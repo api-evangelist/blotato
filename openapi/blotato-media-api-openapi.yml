@@ -42,6 +42,12 @@ paths:
           description: Rate limit exceeded.
 components:
   schemas:
+    UploadMediaResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The Blotato-hosted media URL to reference in a post.
     UploadMediaRequest:
       type: object
       required:
@@ -50,12 +56,6 @@ components:
         url:
           type: string
           description: A publicly accessible media URL, or a base64-encoded image data URL, to upload to Blotato.
-    UploadMediaResponse:
-      type: object
-      properties:
-        url:
-          type: string
-          description: The Blotato-hosted media URL to reference in a post.
   securitySchemes:
     blotatoApiKey:
       type: apiKey
