@@ -1,26 +1,25 @@
 {
   "provider": "blotato",
   "sources": [
-    "_original/blotato-openapi.yml"
+    "_original/blotato-openapi.json"
   ],
   "outputs": [
     "blotato-accounts-api-openapi.yml",
-    "blotato-media-api-openapi.yml",
-    "blotato-posts-api-openapi.yml",
-    "blotato-visuals-api-openapi.yml"
+    "blotato-analytics-api-openapi.yml",
+    "blotato-automations-api-openapi.yml",
+    "blotato-billing-api-openapi.yml",
+    "blotato-comments-api-openapi.yml",
+    "blotato-messaging-api-openapi.yml",
+    "blotato-publishing-api-openapi.yml",
+    "blotato-video-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "blotato-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "blotato-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+7 apis, 8 total)"
   ],
-  "skipped": [
-    "blotato-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "blotato-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "blotato-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "blotato-visuals-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

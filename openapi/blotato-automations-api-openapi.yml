@@ -1,0 +1,2305 @@
+openapi: 3.2.0
+info:
+  title: Blotato Automations API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Automations
+  description: Endpoints related to DM automations, which send a direct message in response to a comment or message on a connected social account.
+paths:
+  /v2/dm-automations:
+    get:
+      summary: List DM automations
+      tags:
+      - Automations
+      description: Lists the current user's DM automations, ordered by creation time (most recent first). Each automation includes run stats for the last 24 hours. Supports cursor-based pagination.
+      parameters:
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of DM automations to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: List of DM automations
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                        buttons:
+                          maxItems: 3
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              title:
+                                maxLength: 20
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                - url
+                              url:
+                                type: string
+                            required:
+                            - title
+                            - type
+                        commentReply:
+                          description: Configuration for public replies to comments that triggered the automation.
+                          type: object
+                          properties:
+                            variants:
+                              description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                              minItems: 3
+                              maxItems: 6
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  text:
+                                    pattern: \S
+                                    type: string
+                                required:
+                                - text
+                          required:
+                          - variants
+                        createdAt:
+                          type: string
+                        dmMessage:
+                          maxLength: 640
+                          type: string
+                        emailGate:
+                          type: object
+                          properties:
+                            message:
+                              minLength: 1
+                              maxLength: 640
+                              type: string
+                          required:
+                          - message
+                        followGate:
+                          type: object
+                          properties:
+                            buttonTitle:
+                              default: I'm following
+                              minLength: 1
+                              maxLength: 20
+                              type: string
+                            message:
+                              minLength: 1
+                              maxLength: 640
+                              type: string
+                          required:
+                          - message
+                        id:
+                          type: string
+                        isActive:
+                          type: boolean
+                        name:
+                          minLength: 1
+                          maxLength: 60
+                          type: string
+                        platform:
+                          type: string
+                          enum:
+                          - facebook
+                          - instagram
+                        publishedVersionId:
+                          type:
+                          - string
+                          - 'null'
+                        target:
+                          type: object
+                          discriminator:
+                            propertyName: targetType
+                          oneOf:
+                          - type: object
+                            properties:
+                              pageId:
+                                type: string
+                              targetType:
+                                type: string
+                                enum:
+                                - facebook
+                            required:
+                            - pageId
+                            - targetType
+                          - type: object
+                            properties:
+                              targetType:
+                                type: string
+                                enum:
+                                - instagram
+                            required:
+                            - targetType
+                        triggers:
+                          type: array
+                          items:
+                            type: object
+                            discriminator:
+                              propertyName: type
+                            oneOf:
+                            - type: object
+                              properties:
+                                id:
+                                  type: string
+                                isActive:
+                                  type: boolean
+                                keywords:
+                                  type: array
+                                  items:
+                                    type: string
+                                postId:
+                                  type:
+                                  - string
+                                  - 'null'
+                                type:
+                                  type: string
+                                  enum:
+                                  - comment-received
+                              required:
+                              - id
+                              - keywords
+                              - type
+                            - type: object
+                              properties:
+                                id:
+                                  type: string
+                                isActive:
+                                  type: boolean
+                                keywords:
+                                  type: array
+                                  items:
+                                    type: string
+                                type:
+                                  type: string
+                                  enum:
+                                  - message-received
+                              required:
+                              - id
+                              - keywords
+                              - type
+                        updatedAt:
+                          type: string
+                        webhook:
+                          type: object
+                          properties:
+                            headers:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            method:
+                              type: string
+                              enum:
+                              - DELETE
+                              - GET
+                              - PATCH
+                              - POST
+                              - PUT
+                            url:
+                              minLength: 1
+                              maxLength: 2048
+                              type: string
+                          required:
+                          - method
+                          - url
+                        stats:
+                          description: Run counts over the last 24 hours, plus when the automation last ran (null if it never ran).
+                          type: object
+                          properties:
+                            completed:
+                              type: integer
+                            failed:
+                              type: integer
+                            triggered:
+                              type: integer
+                            lastRunAt:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - completed
+                          - failed
+                          - triggered
+                          - lastRunAt
+                      required:
+                      - accountId
+                      - buttons
+                      - createdAt
+                      - dmMessage
+                      - id
+                      - isActive
+                      - name
+                      - platform
+                      - publishedVersionId
+                      - target
+                      - triggers
+                      - updatedAt
+                      - stats
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more DM automations.
+                    type: string
+                required:
+                - items
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2DmAutomations
+      x-operation-id-source: derived
+    post:
+      summary: Create a DM automation
+      tags:
+      - Automations
+      description: 'Creates a DM automation: when any of its triggers fires it sends one direct message (text plus up to 3 link buttons). Pass `triggers` to start from several conditions; one matching event starts a single run. Set `followGate` (Instagram only) to gate that message behind a follow check, and `emailGate` to gate it behind the contact replying with an email address. Set `webhook` to call an external endpoint once the message is sent; every method except GET carries a JSON body with the contact''s details, if known.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountId:
+                  type: string
+                buttons:
+                  maxItems: 3
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        maxLength: 20
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - url
+                      url:
+                        type: string
+                    required:
+                    - title
+                    - type
+                commentReply:
+                  description: Configuration for public replies to comments that triggered the automation.
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    variants:
+                      description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                      minItems: 3
+                      maxItems: 6
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          text:
+                            pattern: \S
+                            type: string
+                        required:
+                        - text
+                  required:
+                  - variants
+                dmMessage:
+                  minLength: 1
+                  maxLength: 640
+                  type: string
+                emailGate:
+                  type: object
+                  properties:
+                    message:
+                      minLength: 1
+                      maxLength: 640
+                      type: string
+                  required:
+                  - message
+                followGate:
+                  type: object
+                  properties:
+                    buttonTitle:
+                      default: I'm following
+                      minLength: 1
+                      maxLength: 20
+                      type: string
+                    message:
+                      minLength: 1
+                      maxLength: 640
+                      type: string
+                  required:
+                  - message
+                isActive:
+                  type: boolean
+                name:
+                  minLength: 1
+                  maxLength: 60
+                  type: string
+                platform:
+                  type: string
+                  enum:
+                  - facebook
+                  - instagram
+                target:
+                  type: object
+                  discriminator:
+                    propertyName: targetType
+                  oneOf:
+                  - type: object
+                    properties:
+                      pageId:
+                        type: string
+                      targetType:
+                        type: string
+                        enum:
+                        - facebook
+                    required:
+                    - pageId
+                    - targetType
+                  - type: object
+                    properties:
+                      targetType:
+                        type: string
+                        enum:
+                        - instagram
+                    required:
+                    - targetType
+                triggers:
+                  maxItems: 2
+                  type: array
+                  items:
+                    type: object
+                    discriminator:
+                      propertyName: type
+                    oneOf:
+                    - type: object
+                      properties:
+                        isActive:
+                          type: boolean
+                        keywords:
+                          type: array
+                          items:
+                            type: string
+                        postId:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - comment-received
+                      required:
+                      - keywords
+                      - type
+                    - type: object
+                      properties:
+                        isActive:
+                          type: boolean
+                        keywords:
+                          type: array
+                          items:
+                            type: string
+                        type:
+                          type: string
+                          enum:
+                          - message-received
+                      required:
+                      - keywords
+                      - type
+                webhook:
+                  type: object
+                  properties:
+                    headers:
+                      type: object
+                      additionalProperties:
+                        type: string
+                    method:
+                      type: string
+                      enum:
+                      - DELETE
+                      - GET
+                      - PATCH
+                      - POST
+                      - PUT
+                    url:
+                      minLength: 1
+                      maxLength: 2048
+                      type: string
+                  required:
+                  - method
+                  - url
+              required:
+              - accountId
+              - buttons
+              - dmMessage
+              - name
+              - platform
+              - target
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flow:
+                    type: object
+                    properties:
+                      accountId:
+                        type: string
+                      buttons:
+                        maxItems: 3
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              maxLength: 20
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - url
+                            url:
+                              type: string
+                          required:
+                          - title
+                          - type
+                      commentReply:
+                        description: Configuration for public replies to comments that triggered the automation.
+                        type: object
+                        properties:
+                          variants:
+                            description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                            minItems: 3
+                            maxItems: 6
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                text:
+                                  pattern: \S
+                                  type: string
+                              required:
+                              - text
+                        required:
+                        - variants
+                      createdAt:
+                        type: string
+                      dmMessage:
+                        maxLength: 640
+                        type: string
+                      emailGate:
+                        type: object
+                        properties:
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      followGate:
+                        type: object
+                        properties:
+                          buttonTitle:
+                            default: I'm following
+                            minLength: 1
+                            maxLength: 20
+                            type: string
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      id:
+                        type: string
+                      isActive:
+                        type: boolean
+                      name:
+                        minLength: 1
+                        maxLength: 60
+                        type: string
+                      platform:
+                        type: string
+                        enum:
+                        - facebook
+                        - instagram
+                      publishedVersionId:
+                        type:
+                        - string
+                        - 'null'
+                      target:
+                        type: object
+                        discriminator:
+                          propertyName: targetType
+                        oneOf:
+                        - type: object
+                          properties:
+                            pageId:
+                              type: string
+                            targetType:
+                              type: string
+                              enum:
+                              - facebook
+                          required:
+                          - pageId
+                          - targetType
+                        - type: object
+                          properties:
+                            targetType:
+                              type: string
+                              enum:
+                              - instagram
+                          required:
+                          - targetType
+                      triggers:
+                        type: array
+                        items:
+                          type: object
+                          discriminator:
+                            propertyName: type
+                          oneOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              postId:
+                                type:
+                                - string
+                                - 'null'
+                              type:
+                                type: string
+                                enum:
+                                - comment-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              type:
+                                type: string
+                                enum:
+                                - message-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                      updatedAt:
+                        type: string
+                      webhook:
+                        type: object
+                        properties:
+                          headers:
+                            type: object
+                            additionalProperties:
+                              type: string
+                          method:
+                            type: string
+                            enum:
+                            - DELETE
+                            - GET
+                            - PATCH
+                            - POST
+                            - PUT
+                          url:
+                            minLength: 1
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - method
+                        - url
+                    required:
+                    - accountId
+                    - buttons
+                    - createdAt
+                    - dmMessage
+                    - id
+                    - isActive
+                    - name
+                    - platform
+                    - publishedVersionId
+                    - target
+                    - triggers
+                    - updatedAt
+                required:
+                - flow
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: postV2DmAutomations
+      x-operation-id-source: derived
+  /v2/dm-automations/{id}:
+    get:
+      summary: Get a DM automation
+      tags:
+      - Automations
+      description: Fetches a single DM automation by id, including its triggers and the message(s) it sends.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flow:
+                    type: object
+                    properties:
+                      accountId:
+                        type: string
+                      buttons:
+                        maxItems: 3
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              maxLength: 20
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - url
+                            url:
+                              type: string
+                          required:
+                          - title
+                          - type
+                      commentReply:
+                        description: Configuration for public replies to comments that triggered the automation.
+                        type: object
+                        properties:
+                          variants:
+                            description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                            minItems: 3
+                            maxItems: 6
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                text:
+                                  pattern: \S
+                                  type: string
+                              required:
+                              - text
+                        required:
+                        - variants
+                      createdAt:
+                        type: string
+                      dmMessage:
+                        maxLength: 640
+                        type: string
+                      emailGate:
+                        type: object
+                        properties:
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      followGate:
+                        type: object
+                        properties:
+                          buttonTitle:
+                            default: I'm following
+                            minLength: 1
+                            maxLength: 20
+                            type: string
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      id:
+                        type: string
+                      isActive:
+                        type: boolean
+                      name:
+                        minLength: 1
+                        maxLength: 60
+                        type: string
+                      platform:
+                        type: string
+                        enum:
+                        - facebook
+                        - instagram
+                      publishedVersionId:
+                        type:
+                        - string
+                        - 'null'
+                      target:
+                        type: object
+                        discriminator:
+                          propertyName: targetType
+                        oneOf:
+                        - type: object
+                          properties:
+                            pageId:
+                              type: string
+                            targetType:
+                              type: string
+                              enum:
+                              - facebook
+                          required:
+                          - pageId
+                          - targetType
+                        - type: object
+                          properties:
+                            targetType:
+                              type: string
+                              enum:
+                              - instagram
+                          required:
+                          - targetType
+                      triggers:
+                        type: array
+                        items:
+                          type: object
+                          discriminator:
+                            propertyName: type
+                          oneOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              postId:
+                                type:
+                                - string
+                                - 'null'
+                              type:
+                                type: string
+                                enum:
+                                - comment-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              type:
+                                type: string
+                                enum:
+                                - message-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                      updatedAt:
+                        type: string
+                      webhook:
+                        type: object
+                        properties:
+                          headers:
+                            type: object
+                            additionalProperties:
+                              type: string
+                          method:
+                            type: string
+                            enum:
+                            - DELETE
+                            - GET
+                            - PATCH
+                            - POST
+                            - PUT
+                          url:
+                            minLength: 1
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - method
+                        - url
+                    required:
+                    - accountId
+                    - buttons
+                    - createdAt
+                    - dmMessage
+                    - id
+                    - isActive
+                    - name
+                    - platform
+                    - publishedVersionId
+                    - target
+                    - triggers
+                    - updatedAt
+                required:
+                - flow
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2DmAutomationsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a DM automation
+      tags:
+      - Automations
+      description: Updates a DM automation. Each field present in the patch replaces that field; omitted fields are left unchanged. `triggers` replaces the whole trigger set (`[]` clears it). Pass `null` for `emailGate`, `followGate`, or `webhook` to remove it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patch:
+                  type: object
+                  properties:
+                    buttons:
+                      maxItems: 3
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            maxLength: 20
+                            type: string
+                          type:
+                            type: string
+                            enum:
+                            - url
+                          url:
+                            type: string
+                        required:
+                        - title
+                        - type
+                    dmMessage:
+                      minLength: 1
+                      maxLength: 640
+                      type: string
+                    isActive:
+                      type: boolean
+                    name:
+                      minLength: 1
+                      maxLength: 60
+                      type: string
+                    triggers:
+                      maxItems: 2
+                      type: array
+                      items:
+                        type: object
+                        discriminator:
+                          propertyName: type
+                        oneOf:
+                        - type: object
+                          properties:
+                            isActive:
+                              type: boolean
+                            keywords:
+                              type: array
+                              items:
+                                type: string
+                            postId:
+                              type:
+                              - string
+                              - 'null'
+                            type:
+                              type: string
+                              enum:
+                              - comment-received
+                          required:
+                          - keywords
+                          - type
+                        - type: object
+                          properties:
+                            isActive:
+                              type: boolean
+                            keywords:
+                              type: array
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              enum:
+                              - message-received
+                          required:
+                          - keywords
+                          - type
+                    commentReply:
+                      description: Configuration for public replies to comments that triggered the automation.
+                      type:
+                      - object
+                      - 'null'
+                      properties:
+                        variants:
+                          description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                          minItems: 3
+                          maxItems: 6
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              text:
+                                pattern: \S
+                                type: string
+                            required:
+                            - text
+                      required:
+                      - variants
+                    emailGate:
+                      type:
+                      - object
+                      - 'null'
+                      properties:
+                        message:
+                          minLength: 1
+                          maxLength: 640
+                          type: string
+                      required:
+                      - message
+                    followGate:
+                      type:
+                      - object
+                      - 'null'
+                      properties:
+                        buttonTitle:
+                          default: I'm following
+                          minLength: 1
+                          maxLength: 20
+                          type: string
+                        message:
+                          minLength: 1
+                          maxLength: 640
+                          type: string
+                      required:
+                      - message
+                    webhook:
+                      type:
+                      - object
+                      - 'null'
+                      properties:
+                        headers:
+                          type: object
+                          additionalProperties:
+                            type: string
+                        method:
+                          type: string
+                          enum:
+                          - DELETE
+                          - GET
+                          - PATCH
+                          - POST
+                          - PUT
+                        url:
+                          minLength: 1
+                          maxLength: 2048
+                          type: string
+                      required:
+                      - method
+                      - url
+              required:
+              - patch
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flow:
+                    type: object
+                    properties:
+                      accountId:
+                        type: string
+                      buttons:
+                        maxItems: 3
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              maxLength: 20
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - url
+                            url:
+                              type: string
+                          required:
+                          - title
+                          - type
+                      commentReply:
+                        description: Configuration for public replies to comments that triggered the automation.
+                        type: object
+                        properties:
+                          variants:
+                            description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                            minItems: 3
+                            maxItems: 6
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                text:
+                                  pattern: \S
+                                  type: string
+                              required:
+                              - text
+                        required:
+                        - variants
+                      createdAt:
+                        type: string
+                      dmMessage:
+                        maxLength: 640
+                        type: string
+                      emailGate:
+                        type: object
+                        properties:
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      followGate:
+                        type: object
+                        properties:
+                          buttonTitle:
+                            default: I'm following
+                            minLength: 1
+                            maxLength: 20
+                            type: string
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      id:
+                        type: string
+                      isActive:
+                        type: boolean
+                      name:
+                        minLength: 1
+                        maxLength: 60
+                        type: string
+                      platform:
+                        type: string
+                        enum:
+                        - facebook
+                        - instagram
+                      publishedVersionId:
+                        type:
+                        - string
+                        - 'null'
+                      target:
+                        type: object
+                        discriminator:
+                          propertyName: targetType
+                        oneOf:
+                        - type: object
+                          properties:
+                            pageId:
+                              type: string
+                            targetType:
+                              type: string
+                              enum:
+                              - facebook
+                          required:
+                          - pageId
+                          - targetType
+                        - type: object
+                          properties:
+                            targetType:
+                              type: string
+                              enum:
+                              - instagram
+                          required:
+                          - targetType
+                      triggers:
+                        type: array
+                        items:
+                          type: object
+                          discriminator:
+                            propertyName: type
+                          oneOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              postId:
+                                type:
+                                - string
+                                - 'null'
+                              type:
+                                type: string
+                                enum:
+                                - comment-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              type:
+                                type: string
+                                enum:
+                                - message-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                      updatedAt:
+                        type: string
+                      webhook:
+                        type: object
+                        properties:
+                          headers:
+                            type: object
+                            additionalProperties:
+                              type: string
+                          method:
+                            type: string
+                            enum:
+                            - DELETE
+                            - GET
+                            - PATCH
+                            - POST
+                            - PUT
+                          url:
+                            minLength: 1
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - method
+                        - url
+                    required:
+                    - accountId
+                    - buttons
+                    - createdAt
+                    - dmMessage
+                    - id
+                    - isActive
+                    - name
+                    - platform
+                    - publishedVersionId
+                    - target
+                    - triggers
+                    - updatedAt
+                required:
+                - flow
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: patchV2DmAutomationsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a DM automation
+      tags:
+      - Automations
+      description: Archives a DM automation so its triggers stop listening and it no longer fires. Runs already in flight are unaffected.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flow:
+                    type: object
+                    properties:
+                      accountId:
+                        type: string
+                      buttons:
+                        maxItems: 3
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              maxLength: 20
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - url
+                            url:
+                              type: string
+                          required:
+                          - title
+                          - type
+                      commentReply:
+                        description: Configuration for public replies to comments that triggered the automation.
+                        type: object
+                        properties:
+                          variants:
+                            description: Public reply variants, each with a text. One is picked at random for each comment, capped at the platform's comment length. {{mention}} in a text is replaced with a tag of the commenter.
+                            minItems: 3
+                            maxItems: 6
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                text:
+                                  pattern: \S
+                                  type: string
+                              required:
+                              - text
+                        required:
+                        - variants
+                      createdAt:
+                        type: string
+                      dmMessage:
+                        maxLength: 640
+                        type: string
+                      emailGate:
+                        type: object
+                        properties:
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      followGate:
+                        type: object
+                        properties:
+                          buttonTitle:
+                            default: I'm following
+                            minLength: 1
+                            maxLength: 20
+                            type: string
+                          message:
+                            minLength: 1
+                            maxLength: 640
+                            type: string
+                        required:
+                        - message
+                      id:
+                        type: string
+                      isActive:
+                        type: boolean
+                      name:
+                        minLength: 1
+                        maxLength: 60
+                        type: string
+                      platform:
+                        type: string
+                        enum:
+                        - facebook
+                        - instagram
+                      publishedVersionId:
+                        type:
+                        - string
+                        - 'null'
+                      target:
+                        type: object
+                        discriminator:
+                          propertyName: targetType
+                        oneOf:
+                        - type: object
+                          properties:
+                            pageId:
+                              type: string
+                            targetType:
+                              type: string
+                              enum:
+                              - facebook
+                          required:
+                          - pageId
+                          - targetType
+                        - type: object
+                          properties:
+                            targetType:
+                              type: string
+                              enum:
+                              - instagram
+                          required:
+                          - targetType
+                      triggers:
+                        type: array
+                        items:
+                          type: object
+                          discriminator:
+                            propertyName: type
+                          oneOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              postId:
+                                type:
+                                - string
+                                - 'null'
+                              type:
+                                type: string
+                                enum:
+                                - comment-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              isActive:
+                                type: boolean
+                              keywords:
+                                type: array
+                                items:
+                                  type: string
+                              type:
+                                type: string
+                                enum:
+                                - message-received
+                            required:
+                            - id
+                            - keywords
+                            - type
+                      updatedAt:
+                        type: string
+                      webhook:
+                        type: object
+                        properties:
+                          headers:
+                            type: object
+                            additionalProperties:
+                              type: string
+                          method:
+                            type: string
+                            enum:
+                            - DELETE
+                            - GET
+                            - PATCH
+                            - POST
+                            - PUT
+                          url:
+                            minLength: 1
+                            maxLength: 2048
+                            type: string
+                        required:
+                        - method
+                        - url
+                    required:
+                    - accountId
+                    - buttons
+                    - createdAt
+                    - dmMessage
+                    - id
+                    - isActive
+                    - name
+                    - platform
+                    - publishedVersionId
+                    - target
+                    - triggers
+                    - updatedAt
+                required:
+                - flow
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: deleteV2DmAutomationsById
+      x-operation-id-source: derived
+  /v2/dm-automations/{id}/runs:
+    get:
+      summary: List DM automation runs
+      tags:
+      - Automations
+      description: Lists the execution runs of a single DM automation, ordered by start time (most recent first). Supports cursor-based pagination.
+      parameters:
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of execution runs to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - completed
+            - expired
+            - failed
+            - running
+            - superseded
+            - waiting
+        in: query
+        name: status
+        required: false
+        description: Only return runs in any of these statuses. Defaults to every status.
+      - schema:
+          format: date-time
+          type: string
+        in: query
+        name: since
+        required: false
+        description: Only return runs that have had some activity at or after this ISO 8601 timestamp.
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: Execution runs for the DM automation, most recent first.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        contactId:
+                          type: string
+                        createdAt:
+                          type: string
+                        error:
+                          type: object
+                          properties:
+                            message:
+                              type: string
+                            code:
+                              type: number
+                            action:
+                              description: Action to take to resolve the error
+                              type: string
+                            details:
+                              description: Additional structured details about the error
+                              type: object
+                              additionalProperties: {}
+                          required:
+                          - message
+                        id:
+                          type: string
+                        platform:
+                          type: string
+                          enum:
+                          - facebook
+                          - instagram
+                        status:
+                          type: string
+                          enum:
+                          - completed
+                          - expired
+                          - failed
+                          - running
+                          - superseded
+                          - waiting
+                        updatedAt:
+                          type: string
+                      required:
+                      - contactId
+                      - createdAt
+                      - id
+                      - platform
+                      - status
+                      - updatedAt
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more runs.
+                    type: string
+                required:
+                - items
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2DmAutomationsByIdRuns
+      x-operation-id-source: derived
+  /v2/dm-automations/{id}/logs:
+    get:
+      summary: List DM automation logs
+      tags:
+      - Automations
+      description: Lists the execution logs written as a DM automation's runs progress, ordered by creation time (most recent first). Pass flowRunId to narrow the logs to a single run. Supports cursor-based pagination.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: flowRunId
+        required: false
+        description: Only return logs belonging to this execution run. Omit to return logs across every run of the automation.
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of logs to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: Execution logs for the DM automation, most recent first.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        context:
+                          type: object
+                          additionalProperties: {}
+                        createdAt:
+                          type: string
+                        flowRunId:
+                          type: string
+                        id:
+                          type: string
+                        level:
+                          type: string
+                          enum:
+                          - info
+                          - warning
+                          - error
+                        message:
+                          type: string
+                        nodeId:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - context
+                      - createdAt
+                      - flowRunId
+                      - id
+                      - level
+                      - message
+                      - nodeId
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more logs.
+                    type: string
+                required:
+                - items
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2DmAutomationsByIdLogs
+      x-operation-id-source: derived
+  /v2/dm-automations/{id}/analytics:
+    get:
+      summary: Get DM automation analytics
+      tags:
+      - Automations
+      description: Returns stats for a single DM automation.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analytics:
+                    type: object
+                    properties:
+                      completed:
+                        type: integer
+                      failed:
+                        type: integer
+                      issues:
+                        description: Number of runs that failed in the last 7 days.
+                        type: integer
+                      triggered:
+                        type: integer
+                    required:
+                    - completed
+                    - failed
+                    - issues
+                    - triggered
+                required:
+                - analytics
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2DmAutomationsByIdAnalytics
+      x-operation-id-source: derived
+  /v2/dm-automations/{flowId}/triggers/{triggerId}:
+    patch:
+      summary: Update a DM automation trigger
+      tags:
+      - Automations
+      description: Turns one trigger of a DM automation on or off. It takes effect immediately on a live automation, and does not require an update to the flow. Pull the trigger ID from the automation's `triggers`. At least one trigger must stay active while the automation is live.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patch:
+                  type: object
+                  properties:
+                    isActive:
+                      type: boolean
+                  required:
+                  - isActive
+              required:
+              - patch
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: flowId
+        required: true
+      - schema:
+          type: string
+        in: path
+        name: triggerId
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trigger:
+                    type: object
+                    discriminator:
+                      propertyName: type
+                    oneOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                        isActive:
+                          type: boolean
+                        keywords:
+                          type: array
+                          items:
+                            type: string
+                        postId:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - comment-received
+                      required:
+                      - id
+                      - keywords
+                      - type
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                        isActive:
+                          type: boolean
+                        keywords:
+                          type: array
+                          items:
+                            type: string
+                        type:
+                          type: string
+                          enum:
+                          - message-received
+                      required:
+                      - id
+                      - keywords
+                      - type
+                required:
+                - trigger
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: patchV2DmAutomationsByFlowIdTriggersByTriggerId
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

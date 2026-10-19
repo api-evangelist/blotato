@@ -75,16 +75,16 @@ apis:
     url: https://help.blotato.com/api/api-reference/publish-post
   - type: Documentation
     url: https://help.blotato.com/api/start
-- aid: blotato:blotato-media-api
-  name: Blotato Media API
-  description: Upload media for use in posts.
+- aid: blotato:blotato-analytics-api
+  name: Blotato Analytics API
+  description: Endpoints related to social media analytics for published posts.
   humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
   baseURL: https://backend.blotato.com/v2
   tags:
-  - Media
+  - analytics
   properties:
   - type: OpenAPI
-    url: openapi/blotato-media-api-openapi.yml
+    url: openapi/blotato-analytics-api-openapi.yml
   - type: Documentation
     url: https://help.blotato.com/api/api-reference/upload-media-v2-media
   - type: APIReference
@@ -95,16 +95,18 @@ apis:
     url: https://help.blotato.com/api/api-reference/publish-post
   - type: Documentation
     url: https://help.blotato.com/api/start
-- aid: blotato:blotato-posts-api
-  name: Blotato Posts API
-  description: Publish, schedule, and track posts.
+- aid: blotato:blotato-automations-api
+  name: Blotato Automations API
+  description: >-
+    Endpoints related to DM automations, which send a direct message in response to a comment or message
+    on a connected social account.
   humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
   baseURL: https://backend.blotato.com/v2
   tags:
-  - Posts
+  - automations
   properties:
   - type: OpenAPI
-    url: openapi/blotato-posts-api-openapi.yml
+    url: openapi/blotato-automations-api-openapi.yml
   - type: Documentation
     url: https://help.blotato.com/api/api-reference/upload-media-v2-media
   - type: APIReference
@@ -115,16 +117,97 @@ apis:
     url: https://help.blotato.com/api/api-reference/publish-post
   - type: Documentation
     url: https://help.blotato.com/api/start
-- aid: blotato:blotato-visuals-api
-  name: Blotato Visuals API
-  description: AI video and visual generation from templates.
+- aid: blotato:blotato-billing-api
+  name: Blotato Billing API
+  description: Endpoints related to credits, credit balance, and credit purchases.
   humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
   baseURL: https://backend.blotato.com/v2
   tags:
-  - Visuals
+  - billing
   properties:
   - type: OpenAPI
-    url: openapi/blotato-visuals-api-openapi.yml
+    url: openapi/blotato-billing-api-openapi.yml
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: Documentation
+    url: https://help.blotato.com/api/start
+- aid: blotato:blotato-comments-api
+  name: Blotato Comments API
+  description: Endpoints related to reading and posting comments on social posts.
+  humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  baseURL: https://backend.blotato.com/v2
+  tags:
+  - comments
+  properties:
+  - type: OpenAPI
+    url: openapi/blotato-comments-api-openapi.yml
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: Documentation
+    url: https://help.blotato.com/api/start
+- aid: blotato:blotato-messaging-api
+  name: Blotato Messaging API
+  description: >-
+    Endpoints related to reading and sending direct messages on connected social media accounts.
+  humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  baseURL: https://backend.blotato.com/v2
+  tags:
+  - messaging
+  properties:
+  - type: OpenAPI
+    url: openapi/blotato-messaging-api-openapi.yml
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: Documentation
+    url: https://help.blotato.com/api/start
+- aid: blotato:blotato-publishing-api
+  name: Blotato Publishing API
+  description: Endpoints related to publishing content, such as posts and drafts.
+  humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  baseURL: https://backend.blotato.com/v2
+  tags:
+  - publishing
+  properties:
+  - type: OpenAPI
+    url: openapi/blotato-publishing-api-openapi.yml
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  - type: Documentation
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: APIReference
+    url: https://help.blotato.com/api/api-reference/publish-post
+  - type: Documentation
+    url: https://help.blotato.com/api/start
+- aid: blotato:blotato-video-api
+  name: Blotato Video API
+  description: Endpoints related to video creation and management.
+  humanURL: https://help.blotato.com/api/api-reference/upload-media-v2-media
+  baseURL: https://backend.blotato.com/v2
+  tags:
+  - video
+  properties:
+  - type: OpenAPI
+    url: openapi/blotato-video-api-openapi.yml
   - type: Documentation
     url: https://help.blotato.com/api/api-reference/upload-media-v2-media
   - type: APIReference

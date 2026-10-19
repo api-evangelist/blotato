@@ -1,0 +1,301 @@
+openapi: 3.2.0
+info:
+  title: Blotato Billing API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Billing
+  description: Endpoints related to credits, credit balance, and credit purchases.
+paths:
+  /v2/credits:
+    get:
+      summary: Get credit balance and pricing
+      tags:
+      - Billing
+      description: Fetches the authenticated account's remaining credits, the account email the credentials belong to, and current credit purchase pricing. Confirm the account email before purchasing credits, since credits are non-transferable between accounts.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Credit balance, the account email, and credit purchase pricing
+          content:
+            application/json:
+              schema:
+                description: Credit balance, the account email, and credit purchase pricing
+                example:
+                  creditsRemaining: 54688
+                  accountEmail: user@example.com
+                  purchaseQuantityRange:
+                    min: 1000
+                    max: 10000
+                  pricePer1000CreditsUsd: 6
+                type: object
+                properties:
+                  creditsRemaining:
+                    type: integer
+                  accountEmail:
+                    type: string
+                  purchaseQuantityRange:
+                    type: object
+                    properties:
+                      min:
+                        type: integer
+                      max:
+                        type: integer
+                    required:
+                    - min
+                    - max
+                  pricePer1000CreditsUsd:
+                    type: number
+                required:
+                - creditsRemaining
+                - accountEmail
+                - purchaseQuantityRange
+                - pricePer1000CreditsUsd
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2Credits
+      x-operation-id-source: derived
+    post:
+      summary: Buy credits
+      tags:
+      - Billing
+      description: Creates a Stripe Checkout link the account owner opens in a browser to buy credits (quantity between 1000 and 10000). Creating a link never charges anything; payment happens only when a human completes checkout in the browser, and the purchased credits always land on this account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  minimum: 1000
+                  maximum: 10000
+                  type: integer
+                referral:
+                  type:
+                  - string
+                  - 'null'
+              required:
+              - quantity
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: A Stripe Checkout link to buy credits.
+          content:
+            application/json:
+              schema:
+                description: A Stripe Checkout link to buy credits.
+                example:
+                  checkoutUrl: https://checkout.stripe.com/c/pay/cs_test_123
+                type: object
+                properties:
+                  checkoutUrl:
+                    description: Stripe Checkout URL. The account owner opens this in a browser to complete payment. No charge occurs until checkout is completed.
+                    type: string
+                required:
+                - checkoutUrl
+        '400':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Rate limit exceeded
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: postV2Credits
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

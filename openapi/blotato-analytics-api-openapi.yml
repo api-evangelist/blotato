@@ -1,0 +1,1746 @@
+openapi: 3.2.0
+info:
+  title: Blotato Analytics API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Analytics
+  description: Endpoints related to social media analytics for published posts.
+paths:
+  /v2/posts/{id}/analytics:
+    get:
+      summary: Get analytics for a published post
+      tags:
+      - Analytics
+      description: Returns the latest known analytics and snapshot history for a published post. This endpoint does not trigger a re-fetch.
+      parameters:
+      - schema:
+          example: '12345'
+          type: string
+        in: path
+        name: id
+        required: true
+        description: The id of the published post.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publishedPostId:
+                    description: The id of the published post.
+                    example: '12345'
+                    type: string
+                  platform:
+                    description: Social media platform
+                    example: twitter
+                    type: string
+                    enum:
+                    - twitter
+                    - instagram
+                    - linkedin
+                    - facebook
+                    - tiktok
+                    - pinterest
+                    - threads
+                    - bluesky
+                    - youtube
+                    - other
+                  lastFetchedAt:
+                    type:
+                    - string
+                    - 'null'
+                  lastError:
+                    type:
+                    - string
+                    - 'null'
+                  metrics:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      clicksCount:
+                        type: string
+                      commentsCount:
+                        type: string
+                      followsCount:
+                        type: string
+                      impressionsCount:
+                        type: string
+                      interactionsSum:
+                        type: string
+                      likesCount:
+                        type: string
+                      navigationsCount:
+                        type: string
+                      playsCount:
+                        type: string
+                      profileActivityCount:
+                        type: string
+                      profileVisitsCount:
+                        type: string
+                      reachCount:
+                        type: string
+                      repliesCount:
+                        type: string
+                      savesCount:
+                        type: string
+                      sharesCount:
+                        type: string
+                      viewTimeMsSum:
+                        type: string
+                      viewsCount:
+                        type: string
+                      watchTimeMsAvg:
+                        type: string
+                      twitterRetweetsCount:
+                        type: string
+                      twitterQuotesCount:
+                        type: string
+                      blueskyRepostsCount:
+                        type: string
+                      blueskyQuotesCount:
+                        type: string
+                      threadsRepostsCount:
+                        type: string
+                      threadsQuotesCount:
+                        type: string
+                      linkedinFirstLevelCommentsCount:
+                        type: string
+                      linkedinReactionsByType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      pinterestPinClicksCount:
+                        type: string
+                      pinterestReactionsCount:
+                        type: string
+                      pinterestVideoP95ViewsCount:
+                        type: string
+                      pinterestVideo10sViewsCount:
+                        type: string
+                      pinterestVideoMrcViewsCount:
+                        type: string
+                      pinterestVideoV50WatchTimeMsSum:
+                        type: string
+                      pinterestSaveRate:
+                        type: number
+                      twitterPerMediaVideoViewsCount:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      twitterPerMediaVideoPlaybackStartCount:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      twitterPerMediaVideoPlayback25Count:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      twitterPerMediaVideoPlayback50Count:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      twitterPerMediaVideoPlayback75Count:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      twitterPerMediaVideoPlaybackCompleteCount:
+                        type: array
+                        items:
+                          type:
+                          - string
+                          - 'null'
+                      facebookPostMediaViewsCount:
+                        type: string
+                      facebookPostMediaViewsUniqueCount:
+                        type: string
+                      facebookPostReactionsByType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookBlueReelsPlaysCount:
+                        type: string
+                      facebookFbReelsReplaysCount:
+                        type: string
+                      facebookFbReelsTotalPlaysCount:
+                        type: string
+                      facebookPostVideoWatchTimeMsAvg:
+                        type: string
+                      facebookPostVideoFollowersCount:
+                        type: string
+                      facebookPostVideoLikesByReactionType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookPostVideoSocialActionsByType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookPostVideoViewTimeMsSum:
+                        type: string
+                      facebookTotalVideoViewsCount:
+                        type: string
+                      facebookTotalVideoViewsUniqueCount:
+                        type: string
+                      facebookTotalVideoViewsAutoplayedCount:
+                        type: string
+                      facebookTotalVideoViewsClickedToPlayCount:
+                        type: string
+                      facebookTotalVideoViewsSoundOnCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsUniqueCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsAutoplayedCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsClickedToPlayCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsOrganicCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsOrganicUniqueCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsPaidCount:
+                        type: string
+                      facebookTotalVideoCompleteViewsPaidUniqueCount:
+                        type: string
+                      facebookTotalVideoViews10sCount:
+                        type: string
+                      facebookTotalVideoViews10sUniqueCount:
+                        type: string
+                      facebookTotalVideoViews10sAutoplayedCount:
+                        type: string
+                      facebookTotalVideoViews10sClickedToPlayCount:
+                        type: string
+                      facebookTotalVideoViews10sOrganicCount:
+                        type: string
+                      facebookTotalVideoViews10sPaidCount:
+                        type: string
+                      facebookTotalVideoViews10sSoundOnCount:
+                        type: string
+                      facebookTotalVideoViews15sCount:
+                        type: string
+                      facebookTotalVideoViews60sExcludesShorterCount:
+                        type: string
+                      facebookTotalVideoWatchTimeMsAvg:
+                        type: string
+                      facebookTotalVideoViewTimeMsSum:
+                        type: string
+                      facebookTotalVideoViewTimeOrganicMsSum:
+                        type: string
+                      facebookTotalVideoViewTimePaidMsSum:
+                        type: string
+                      facebookTotalVideoStoriesByActionType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookTotalVideoReactionsByType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookTotalVideoViewTimeMsByAgeBucketAndGender:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookTotalVideoViewTimeMsByRegionId:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      facebookTotalVideoViewsByDistributionType:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      youtubeDislikesCount:
+                        type: string
+                      youtubeSubscribersLostCount:
+                        type: string
+                      youtubeVideosAddedToPlaylistsCount:
+                        type: string
+                      youtubeVideosRemovedFromPlaylistsCount:
+                        type: string
+                      youtubeRedViewsCount:
+                        type: string
+                      youtubeRedViewTimeMsSum:
+                        type: string
+                      youtubeEngagedViewsCount:
+                        type: string
+                      youtubeAverageViewPercentage:
+                        type: number
+                      youtubeCardClicksCount:
+                        type: string
+                      youtubeCardImpressionsCount:
+                        type: string
+                      youtubeCardClickRate:
+                        type: number
+                      youtubeCardTeaserClicksCount:
+                        type: string
+                      youtubeCardTeaserImpressionsCount:
+                        type: string
+                      youtubeCardTeaserClickRate:
+                        type: number
+                      youtubeAnnotationClicksCount:
+                        type: string
+                      youtubeAnnotationClickableImpressionsCount:
+                        type: string
+                      youtubeAnnotationClosesCount:
+                        type: string
+                      youtubeAnnotationClosableImpressionsCount:
+                        type: string
+                      youtubeAnnotationImpressionsCount:
+                        type: string
+                      youtubeAnnotationClickThroughRate:
+                        type: number
+                      youtubeAnnotationCloseRate:
+                        type: number
+                  history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fetchedAt:
+                          description: ISO 8601 timestamp when metrics were captured.
+                          type: string
+                        metrics:
+                          type: object
+                          properties:
+                            clicksCount:
+                              type: string
+                            commentsCount:
+                              type: string
+                            followsCount:
+                              type: string
+                            impressionsCount:
+                              type: string
+                            interactionsSum:
+                              type: string
+                            likesCount:
+                              type: string
+                            navigationsCount:
+                              type: string
+                            playsCount:
+                              type: string
+                            profileActivityCount:
+                              type: string
+                            profileVisitsCount:
+                              type: string
+                            reachCount:
+                              type: string
+                            repliesCount:
+                              type: string
+                            savesCount:
+                              type: string
+                            sharesCount:
+                              type: string
+                            viewTimeMsSum:
+                              type: string
+                            viewsCount:
+                              type: string
+                            watchTimeMsAvg:
+                              type: string
+                            twitterRetweetsCount:
+                              type: string
+                            twitterQuotesCount:
+                              type: string
+                            blueskyRepostsCount:
+                              type: string
+                            blueskyQuotesCount:
+                              type: string
+                            threadsRepostsCount:
+                              type: string
+                            threadsQuotesCount:
+                              type: string
+                            linkedinFirstLevelCommentsCount:
+                              type: string
+                            linkedinReactionsByType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            pinterestPinClicksCount:
+                              type: string
+                            pinterestReactionsCount:
+                              type: string
+                            pinterestVideoP95ViewsCount:
+                              type: string
+                            pinterestVideo10sViewsCount:
+                              type: string
+                            pinterestVideoMrcViewsCount:
+                              type: string
+                            pinterestVideoV50WatchTimeMsSum:
+                              type: string
+                            pinterestSaveRate:
+                              type: number
+                            twitterPerMediaVideoViewsCount:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            twitterPerMediaVideoPlaybackStartCount:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            twitterPerMediaVideoPlayback25Count:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            twitterPerMediaVideoPlayback50Count:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            twitterPerMediaVideoPlayback75Count:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            twitterPerMediaVideoPlaybackCompleteCount:
+                              type: array
+                              items:
+                                type:
+                                - string
+                                - 'null'
+                            facebookPostMediaViewsCount:
+                              type: string
+                            facebookPostMediaViewsUniqueCount:
+                              type: string
+                            facebookPostReactionsByType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookBlueReelsPlaysCount:
+                              type: string
+                            facebookFbReelsReplaysCount:
+                              type: string
+                            facebookFbReelsTotalPlaysCount:
+                              type: string
+                            facebookPostVideoWatchTimeMsAvg:
+                              type: string
+                            facebookPostVideoFollowersCount:
+                              type: string
+                            facebookPostVideoLikesByReactionType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookPostVideoSocialActionsByType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookPostVideoViewTimeMsSum:
+                              type: string
+                            facebookTotalVideoViewsCount:
+                              type: string
+                            facebookTotalVideoViewsUniqueCount:
+                              type: string
+                            facebookTotalVideoViewsAutoplayedCount:
+                              type: string
+                            facebookTotalVideoViewsClickedToPlayCount:
+                              type: string
+                            facebookTotalVideoViewsSoundOnCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsUniqueCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsAutoplayedCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsClickedToPlayCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsOrganicCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsOrganicUniqueCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsPaidCount:
+                              type: string
+                            facebookTotalVideoCompleteViewsPaidUniqueCount:
+                              type: string
+                            facebookTotalVideoViews10sCount:
+                              type: string
+                            facebookTotalVideoViews10sUniqueCount:
+                              type: string
+                            facebookTotalVideoViews10sAutoplayedCount:
+                              type: string
+                            facebookTotalVideoViews10sClickedToPlayCount:
+                              type: string
+                            facebookTotalVideoViews10sOrganicCount:
+                              type: string
+                            facebookTotalVideoViews10sPaidCount:
+                              type: string
+                            facebookTotalVideoViews10sSoundOnCount:
+                              type: string
+                            facebookTotalVideoViews15sCount:
+                              type: string
+                            facebookTotalVideoViews60sExcludesShorterCount:
+                              type: string
+                            facebookTotalVideoWatchTimeMsAvg:
+                              type: string
+                            facebookTotalVideoViewTimeMsSum:
+                              type: string
+                            facebookTotalVideoViewTimeOrganicMsSum:
+                              type: string
+                            facebookTotalVideoViewTimePaidMsSum:
+                              type: string
+                            facebookTotalVideoStoriesByActionType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookTotalVideoReactionsByType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookTotalVideoViewTimeMsByAgeBucketAndGender:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookTotalVideoViewTimeMsByRegionId:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            facebookTotalVideoViewsByDistributionType:
+                              type: object
+                              additionalProperties:
+                                type: string
+                            youtubeDislikesCount:
+                              type: string
+                            youtubeSubscribersLostCount:
+                              type: string
+                            youtubeVideosAddedToPlaylistsCount:
+                              type: string
+                            youtubeVideosRemovedFromPlaylistsCount:
+                              type: string
+                            youtubeRedViewsCount:
+                              type: string
+                            youtubeRedViewTimeMsSum:
+                              type: string
+                            youtubeEngagedViewsCount:
+                              type: string
+                            youtubeAverageViewPercentage:
+                              type: number
+                            youtubeCardClicksCount:
+                              type: string
+                            youtubeCardImpressionsCount:
+                              type: string
+                            youtubeCardClickRate:
+                              type: number
+                            youtubeCardTeaserClicksCount:
+                              type: string
+                            youtubeCardTeaserImpressionsCount:
+                              type: string
+                            youtubeCardTeaserClickRate:
+                              type: number
+                            youtubeAnnotationClicksCount:
+                              type: string
+                            youtubeAnnotationClickableImpressionsCount:
+                              type: string
+                            youtubeAnnotationClosesCount:
+                              type: string
+                            youtubeAnnotationClosableImpressionsCount:
+                              type: string
+                            youtubeAnnotationImpressionsCount:
+                              type: string
+                            youtubeAnnotationClickThroughRate:
+                              type: number
+                            youtubeAnnotationCloseRate:
+                              type: number
+                      required:
+                      - fetchedAt
+                      - metrics
+                required:
+                - publishedPostId
+                - platform
+                - lastFetchedAt
+                - lastError
+                - metrics
+                - history
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2PostsByIdAnalytics
+      x-operation-id-source: derived
+  /v2/analytics:
+    get:
+      summary: List top performing posts
+      tags:
+      - Analytics
+      description: Returns the user's top performing published posts ordered by the requested metric over the given time range.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: since
+        required: false
+        description: Only include posts published on or after this ISO 8601 timestamp. Defaults to 30 days ago.
+      - schema:
+          type: string
+        in: query
+        name: until
+        required: false
+        description: Only include posts published on or before this ISO 8601 timestamp. Defaults to now.
+      - schema:
+          type: string
+        in: query
+        name: platform
+        required: false
+      - schema:
+          type: string
+          enum:
+          - likes_count
+          - comments_count
+          - views_count
+          - reach_count
+        in: query
+        name: sortBy
+        required: false
+      - schema:
+          minimum: 1
+          maximum: 100
+          default: 20
+          type: integer
+        in: query
+        name: limit
+        required: false
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        content:
+                          type: string
+                        postUrl:
+                          type:
+                          - string
+                          - 'null'
+                        platform:
+                          description: Social media platform
+                          example: twitter
+                          type: string
+                          enum:
+                          - twitter
+                          - instagram
+                          - linkedin
+                          - facebook
+                          - tiktok
+                          - pinterest
+                          - threads
+                          - bluesky
+                          - youtube
+                          - other
+                        createdAt:
+                          type: string
+                        mediaUrls:
+                          type: array
+                          items:
+                            type: string
+                        latestMetrics:
+                          type: object
+                          properties:
+                            fetchedAt:
+                              description: ISO 8601 timestamp when metrics were captured.
+                              type: string
+                            metrics:
+                              type: object
+                              properties:
+                                clicksCount:
+                                  type: string
+                                commentsCount:
+                                  type: string
+                                followsCount:
+                                  type: string
+                                impressionsCount:
+                                  type: string
+                                interactionsSum:
+                                  type: string
+                                likesCount:
+                                  type: string
+                                navigationsCount:
+                                  type: string
+                                playsCount:
+                                  type: string
+                                profileActivityCount:
+                                  type: string
+                                profileVisitsCount:
+                                  type: string
+                                reachCount:
+                                  type: string
+                                repliesCount:
+                                  type: string
+                                savesCount:
+                                  type: string
+                                sharesCount:
+                                  type: string
+                                viewTimeMsSum:
+                                  type: string
+                                viewsCount:
+                                  type: string
+                                watchTimeMsAvg:
+                                  type: string
+                                twitterRetweetsCount:
+                                  type: string
+                                twitterQuotesCount:
+                                  type: string
+                                blueskyRepostsCount:
+                                  type: string
+                                blueskyQuotesCount:
+                                  type: string
+                                threadsRepostsCount:
+                                  type: string
+                                threadsQuotesCount:
+                                  type: string
+                                linkedinFirstLevelCommentsCount:
+                                  type: string
+                                linkedinReactionsByType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                pinterestPinClicksCount:
+                                  type: string
+                                pinterestReactionsCount:
+                                  type: string
+                                pinterestVideoP95ViewsCount:
+                                  type: string
+                                pinterestVideo10sViewsCount:
+                                  type: string
+                                pinterestVideoMrcViewsCount:
+                                  type: string
+                                pinterestVideoV50WatchTimeMsSum:
+                                  type: string
+                                pinterestSaveRate:
+                                  type: number
+                                twitterPerMediaVideoViewsCount:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                twitterPerMediaVideoPlaybackStartCount:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                twitterPerMediaVideoPlayback25Count:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                twitterPerMediaVideoPlayback50Count:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                twitterPerMediaVideoPlayback75Count:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                twitterPerMediaVideoPlaybackCompleteCount:
+                                  type: array
+                                  items:
+                                    type:
+                                    - string
+                                    - 'null'
+                                facebookPostMediaViewsCount:
+                                  type: string
+                                facebookPostMediaViewsUniqueCount:
+                                  type: string
+                                facebookPostReactionsByType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookBlueReelsPlaysCount:
+                                  type: string
+                                facebookFbReelsReplaysCount:
+                                  type: string
+                                facebookFbReelsTotalPlaysCount:
+                                  type: string
+                                facebookPostVideoWatchTimeMsAvg:
+                                  type: string
+                                facebookPostVideoFollowersCount:
+                                  type: string
+                                facebookPostVideoLikesByReactionType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookPostVideoSocialActionsByType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookPostVideoViewTimeMsSum:
+                                  type: string
+                                facebookTotalVideoViewsCount:
+                                  type: string
+                                facebookTotalVideoViewsUniqueCount:
+                                  type: string
+                                facebookTotalVideoViewsAutoplayedCount:
+                                  type: string
+                                facebookTotalVideoViewsClickedToPlayCount:
+                                  type: string
+                                facebookTotalVideoViewsSoundOnCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsUniqueCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsAutoplayedCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsClickedToPlayCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsOrganicCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsOrganicUniqueCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsPaidCount:
+                                  type: string
+                                facebookTotalVideoCompleteViewsPaidUniqueCount:
+                                  type: string
+                                facebookTotalVideoViews10sCount:
+                                  type: string
+                                facebookTotalVideoViews10sUniqueCount:
+                                  type: string
+                                facebookTotalVideoViews10sAutoplayedCount:
+                                  type: string
+                                facebookTotalVideoViews10sClickedToPlayCount:
+                                  type: string
+                                facebookTotalVideoViews10sOrganicCount:
+                                  type: string
+                                facebookTotalVideoViews10sPaidCount:
+                                  type: string
+                                facebookTotalVideoViews10sSoundOnCount:
+                                  type: string
+                                facebookTotalVideoViews15sCount:
+                                  type: string
+                                facebookTotalVideoViews60sExcludesShorterCount:
+                                  type: string
+                                facebookTotalVideoWatchTimeMsAvg:
+                                  type: string
+                                facebookTotalVideoViewTimeMsSum:
+                                  type: string
+                                facebookTotalVideoViewTimeOrganicMsSum:
+                                  type: string
+                                facebookTotalVideoViewTimePaidMsSum:
+                                  type: string
+                                facebookTotalVideoStoriesByActionType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookTotalVideoReactionsByType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookTotalVideoViewTimeMsByAgeBucketAndGender:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookTotalVideoViewTimeMsByRegionId:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                facebookTotalVideoViewsByDistributionType:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+                                youtubeDislikesCount:
+                                  type: string
+                                youtubeSubscribersLostCount:
+                                  type: string
+                                youtubeVideosAddedToPlaylistsCount:
+                                  type: string
+                                youtubeVideosRemovedFromPlaylistsCount:
+                                  type: string
+                                youtubeRedViewsCount:
+                                  type: string
+                                youtubeRedViewTimeMsSum:
+                                  type: string
+                                youtubeEngagedViewsCount:
+                                  type: string
+                                youtubeAverageViewPercentage:
+                                  type: number
+                                youtubeCardClicksCount:
+                                  type: string
+                                youtubeCardImpressionsCount:
+                                  type: string
+                                youtubeCardClickRate:
+                                  type: number
+                                youtubeCardTeaserClicksCount:
+                                  type: string
+                                youtubeCardTeaserImpressionsCount:
+                                  type: string
+                                youtubeCardTeaserClickRate:
+                                  type: number
+                                youtubeAnnotationClicksCount:
+                                  type: string
+                                youtubeAnnotationClickableImpressionsCount:
+                                  type: string
+                                youtubeAnnotationClosesCount:
+                                  type: string
+                                youtubeAnnotationClosableImpressionsCount:
+                                  type: string
+                                youtubeAnnotationImpressionsCount:
+                                  type: string
+                                youtubeAnnotationClickThroughRate:
+                                  type: number
+                                youtubeAnnotationCloseRate:
+                                  type: number
+                          required:
+                          - fetchedAt
+                          - metrics
+                        metricsHistory:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              fetchedAt:
+                                description: ISO 8601 timestamp when metrics were captured.
+                                type: string
+                              metrics:
+                                type: object
+                                properties:
+                                  clicksCount:
+                                    type: string
+                                  commentsCount:
+                                    type: string
+                                  followsCount:
+                                    type: string
+                                  impressionsCount:
+                                    type: string
+                                  interactionsSum:
+                                    type: string
+                                  likesCount:
+                                    type: string
+                                  navigationsCount:
+                                    type: string
+                                  playsCount:
+                                    type: string
+                                  profileActivityCount:
+                                    type: string
+                                  profileVisitsCount:
+                                    type: string
+                                  reachCount:
+                                    type: string
+                                  repliesCount:
+                                    type: string
+                                  savesCount:
+                                    type: string
+                                  sharesCount:
+                                    type: string
+                                  viewTimeMsSum:
+                                    type: string
+                                  viewsCount:
+                                    type: string
+                                  watchTimeMsAvg:
+                                    type: string
+                                  twitterRetweetsCount:
+                                    type: string
+                                  twitterQuotesCount:
+                                    type: string
+                                  blueskyRepostsCount:
+                                    type: string
+                                  blueskyQuotesCount:
+                                    type: string
+                                  threadsRepostsCount:
+                                    type: string
+                                  threadsQuotesCount:
+                                    type: string
+                                  linkedinFirstLevelCommentsCount:
+                                    type: string
+                                  linkedinReactionsByType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  pinterestPinClicksCount:
+                                    type: string
+                                  pinterestReactionsCount:
+                                    type: string
+                                  pinterestVideoP95ViewsCount:
+                                    type: string
+                                  pinterestVideo10sViewsCount:
+                                    type: string
+                                  pinterestVideoMrcViewsCount:
+                                    type: string
+                                  pinterestVideoV50WatchTimeMsSum:
+                                    type: string
+                                  pinterestSaveRate:
+                                    type: number
+                                  twitterPerMediaVideoViewsCount:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  twitterPerMediaVideoPlaybackStartCount:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  twitterPerMediaVideoPlayback25Count:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  twitterPerMediaVideoPlayback50Count:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  twitterPerMediaVideoPlayback75Count:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  twitterPerMediaVideoPlaybackCompleteCount:
+                                    type: array
+                                    items:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  facebookPostMediaViewsCount:
+                                    type: string
+                                  facebookPostMediaViewsUniqueCount:
+                                    type: string
+                                  facebookPostReactionsByType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookBlueReelsPlaysCount:
+                                    type: string
+                                  facebookFbReelsReplaysCount:
+                                    type: string
+                                  facebookFbReelsTotalPlaysCount:
+                                    type: string
+                                  facebookPostVideoWatchTimeMsAvg:
+                                    type: string
+                                  facebookPostVideoFollowersCount:
+                                    type: string
+                                  facebookPostVideoLikesByReactionType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookPostVideoSocialActionsByType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookPostVideoViewTimeMsSum:
+                                    type: string
+                                  facebookTotalVideoViewsCount:
+                                    type: string
+                                  facebookTotalVideoViewsUniqueCount:
+                                    type: string
+                                  facebookTotalVideoViewsAutoplayedCount:
+                                    type: string
+                                  facebookTotalVideoViewsClickedToPlayCount:
+                                    type: string
+                                  facebookTotalVideoViewsSoundOnCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsUniqueCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsAutoplayedCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsClickedToPlayCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsOrganicCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsOrganicUniqueCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsPaidCount:
+                                    type: string
+                                  facebookTotalVideoCompleteViewsPaidUniqueCount:
+                                    type: string
+                                  facebookTotalVideoViews10sCount:
+                                    type: string
+                                  facebookTotalVideoViews10sUniqueCount:
+                                    type: string
+                                  facebookTotalVideoViews10sAutoplayedCount:
+                                    type: string
+                                  facebookTotalVideoViews10sClickedToPlayCount:
+                                    type: string
+                                  facebookTotalVideoViews10sOrganicCount:
+                                    type: string
+                                  facebookTotalVideoViews10sPaidCount:
+                                    type: string
+                                  facebookTotalVideoViews10sSoundOnCount:
+                                    type: string
+                                  facebookTotalVideoViews15sCount:
+                                    type: string
+                                  facebookTotalVideoViews60sExcludesShorterCount:
+                                    type: string
+                                  facebookTotalVideoWatchTimeMsAvg:
+                                    type: string
+                                  facebookTotalVideoViewTimeMsSum:
+                                    type: string
+                                  facebookTotalVideoViewTimeOrganicMsSum:
+                                    type: string
+                                  facebookTotalVideoViewTimePaidMsSum:
+                                    type: string
+                                  facebookTotalVideoStoriesByActionType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookTotalVideoReactionsByType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookTotalVideoViewTimeMsByAgeBucketAndGender:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookTotalVideoViewTimeMsByRegionId:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  facebookTotalVideoViewsByDistributionType:
+                                    type: object
+                                    additionalProperties:
+                                      type: string
+                                  youtubeDislikesCount:
+                                    type: string
+                                  youtubeSubscribersLostCount:
+                                    type: string
+                                  youtubeVideosAddedToPlaylistsCount:
+                                    type: string
+                                  youtubeVideosRemovedFromPlaylistsCount:
+                                    type: string
+                                  youtubeRedViewsCount:
+                                    type: string
+                                  youtubeRedViewTimeMsSum:
+                                    type: string
+                                  youtubeEngagedViewsCount:
+                                    type: string
+                                  youtubeAverageViewPercentage:
+                                    type: number
+                                  youtubeCardClicksCount:
+                                    type: string
+                                  youtubeCardImpressionsCount:
+                                    type: string
+                                  youtubeCardClickRate:
+                                    type: number
+                                  youtubeCardTeaserClicksCount:
+                                    type: string
+                                  youtubeCardTeaserImpressionsCount:
+                                    type: string
+                                  youtubeCardTeaserClickRate:
+                                    type: number
+                                  youtubeAnnotationClicksCount:
+                                    type: string
+                                  youtubeAnnotationClickableImpressionsCount:
+                                    type: string
+                                  youtubeAnnotationClosesCount:
+                                    type: string
+                                  youtubeAnnotationClosableImpressionsCount:
+                                    type: string
+                                  youtubeAnnotationImpressionsCount:
+                                    type: string
+                                  youtubeAnnotationClickThroughRate:
+                                    type: number
+                                  youtubeAnnotationCloseRate:
+                                    type: number
+                            required:
+                            - fetchedAt
+                            - metrics
+                      required:
+                      - id
+                      - content
+                      - postUrl
+                      - platform
+                      - createdAt
+                      - mediaUrls
+                      - metricsHistory
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2Analytics
+      x-operation-id-source: derived
+  /v2/analytics/platforms:
+    get:
+      summary: List performance by platform
+      tags:
+      - Analytics
+      description: Returns engagement and view totals per platform for the user's posts published in the given time range, based on the latest analytics snapshot of each post.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: since
+        required: false
+        description: Only include posts published on or after this ISO 8601 timestamp. Defaults to 24 hours ago.
+      - schema:
+          type: string
+        in: query
+        name: until
+        required: false
+        description: Only include posts published on or before this ISO 8601 timestamp. Defaults to now.
+      - schema:
+          type: string
+          enum:
+          - hour
+          - day
+        in: query
+        name: bucket
+        required: false
+        description: Size of the time buckets. Defaults to 'hour'.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: One entry per platform with analytics, most engagements first.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        platform:
+                          description: Social media platform
+                          example: twitter
+                          type: string
+                          enum:
+                          - twitter
+                          - instagram
+                          - linkedin
+                          - facebook
+                          - tiktok
+                          - pinterest
+                          - threads
+                          - bluesky
+                          - youtube
+                          - other
+                        postsCount:
+                          description: Number of posts published in the window that have analytics.
+                          type: integer
+                        engagementsCount:
+                          description: Sum of likes, comments (or replies), shares, and saves on the latest snapshot of each post.
+                          type: string
+                        likesCount:
+                          description: Sum of likes on the latest snapshot of each post.
+                          type: string
+                        commentsCount:
+                          description: Sum of comments (or replies) on the latest snapshot of each post.
+                          type: string
+                        viewsCount:
+                          description: Sum of views (or impressions) on the latest snapshot of each post. Null if the platform does not report either.
+                          type:
+                          - string
+                          - 'null'
+                        buckets:
+                          description: Metrics of the posts published in each bucket, oldest first. Buckets without posts are omitted.
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              start:
+                                description: ISO 8601 start of the bucket (UTC).
+                                type: string
+                              engagementsCount:
+                                type: string
+                              likesCount:
+                                type: string
+                              commentsCount:
+                                type: string
+                              viewsCount:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - start
+                            - engagementsCount
+                            - likesCount
+                            - commentsCount
+                            - viewsCount
+                      required:
+                      - platform
+                      - postsCount
+                      - engagementsCount
+                      - likesCount
+                      - commentsCount
+                      - viewsCount
+                      - buckets
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2AnalyticsPlatforms
+      x-operation-id-source: derived
+  /v2/analytics/summary:
+    get:
+      summary: Get analytics summary
+      tags:
+      - Analytics
+      description: Returns published and failed post counts (in total, per platform, and per time bucket) and metric totals for the user's posts published in the given time range.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: since
+        required: false
+        description: Only include posts published on or after this ISO 8601 timestamp. Defaults to 30 days ago.
+      - schema:
+          type: string
+        in: query
+        name: until
+        required: false
+        description: Only include posts published on or before this ISO 8601 timestamp. Defaults to now.
+      - schema:
+          type: string
+          enum:
+          - hour
+          - day
+        in: query
+        name: bucket
+        required: false
+        description: Size of the time buckets. Defaults to 'hour'.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  publishedCount:
+                    description: Number of posts published through Blotato in the window.
+                    type: integer
+                  failedCount:
+                    description: Number of posts that failed to publish in the window.
+                    type: integer
+                  metrics:
+                    description: Totals from the latest analytics snapshot of each post published in the window. Null if the user does not have analytics enabled.
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      postsCount:
+                        description: Number of posts published in the window that have analytics.
+                        type: integer
+                      viewsCount:
+                        description: Sum of views (or impressions) on the latest snapshot of each post.
+                        type: string
+                      likesCount:
+                        description: Sum of likes on the latest snapshot of each post.
+                        type: string
+                      commentsCount:
+                        description: Sum of comments (or replies) on the latest snapshot of each post.
+                        type: string
+                    required:
+                    - postsCount
+                    - viewsCount
+                    - likesCount
+                    - commentsCount
+                  platforms:
+                    description: Published and failed posts per platform, most posts first. Platforms without posts are omitted.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        platform:
+                          description: Social media platform
+                          example: twitter
+                          type: string
+                          enum:
+                          - twitter
+                          - instagram
+                          - linkedin
+                          - facebook
+                          - tiktok
+                          - pinterest
+                          - threads
+                          - bluesky
+                          - youtube
+                          - other
+                        publishedCount:
+                          type: integer
+                        failedCount:
+                          type: integer
+                      required:
+                      - platform
+                      - publishedCount
+                      - failedCount
+                  buckets:
+                    description: Published and failed posts in each bucket, oldest first. Buckets without posts are omitted.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        start:
+                          description: ISO 8601 start of the bucket (UTC).
+                          type: string
+                        publishedCount:
+                          type: integer
+                        failedCount:
+                          type: integer
+                      required:
+                      - start
+                      - publishedCount
+                      - failedCount
+                required:
+                - publishedCount
+                - failedCount
+                - metrics
+                - platforms
+                - buckets
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2AnalyticsSummary
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

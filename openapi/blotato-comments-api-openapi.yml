@@ -1,0 +1,703 @@
+openapi: 3.2.0
+info:
+  title: Blotato Comments API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Comments
+  description: Endpoints related to reading and posting comments on social posts.
+paths:
+  /v2/comments:
+    get:
+      summary: List comments
+      tags:
+      - Comments
+      description: Lists the current user's comments across their connected social accounts, ordered by creation time (most recent first). Supports cursor-based pagination and filtering by platform, account, published post, and creation time window.
+      parameters:
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of comments to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - facebook
+            - instagram
+        example:
+        - instagram
+        - facebook
+        in: query
+        name: platform
+        required: false
+        description: Filter comments by platform. Pass multiple values to include any of them.
+      - schema:
+          type: string
+        in: query
+        name: accountId
+        required: false
+        description: Filter to comments belonging to a single connected account.
+      - schema:
+          type: string
+        in: query
+        name: parentCommentId
+        required: false
+        description: Filter to direct replies to a single comment.
+      - schema:
+          type: string
+        in: query
+        name: postId
+        required: false
+        description: Filter to comments on a single Blotato-published post. Accepts either the published post ID or the post submission ID returned when the post was published.
+      - schema:
+          example: '2026-06-01T00:00:00.000Z'
+          type: string
+        in: query
+        name: since
+        required: false
+        description: Only include comments created on or after this ISO 8601 timestamp. Omit to apply no lower bound.
+      - schema:
+          example: '2026-06-30T23:59:59.000Z'
+          type: string
+        in: query
+        name: until
+        required: false
+        description: Only include comments created on or before this ISO 8601 timestamp. Omit to apply no upper bound.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: List of comments.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountId:
+                          description: ID of the social account this comment belongs to.
+                          type: string
+                        authorId:
+                          description: Platform-native id of the comment author.
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                        errorCode:
+                          description: Set only when status is `failed`.
+                          type:
+                          - integer
+                          - 'null'
+                        errorMessage:
+                          description: Set only when status is `failed`.
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                        isAuthor:
+                          description: '`true` if the user''s own connected account authored this comment.'
+                          type: boolean
+                        parentCommentId:
+                          description: Blotato id of the parent comment when this comment is a reply. null for top-level comments.
+                          type:
+                          - string
+                          - 'null'
+                        platform:
+                          type: string
+                          enum:
+                          - facebook
+                          - instagram
+                        platformCommentId:
+                          description: Platform-native id of the comment.
+                          type:
+                          - string
+                          - 'null'
+                        platformPostId:
+                          description: Platform-native id of the parent post being commented on.
+                          type: string
+                        postId:
+                          description: Blotato ID of the post (if published through Blotato).
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                          enum:
+                          - deleted
+                          - failed
+                          - posted
+                          - processing
+                          - queued
+                        text:
+                          type: string
+                      required:
+                      - accountId
+                      - authorId
+                      - createdAt
+                      - errorCode
+                      - errorMessage
+                      - id
+                      - isAuthor
+                      - parentCommentId
+                      - platform
+                      - platformCommentId
+                      - platformPostId
+                      - postId
+                      - status
+                      - text
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more comments.
+                    type: string
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2Comments
+      x-operation-id-source: derived
+    post:
+      summary: Post a comment
+      tags:
+      - Comments
+      description: Posts a comment on a published post, or a reply to an existing comment on that post when `parentCommentId` is provided.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  description: Blotato id of the published post to comment on.
+                  type: string
+                text:
+                  minLength: 1
+                  maxLength: 10000
+                  description: Plain-text comment body.
+                  type: string
+                parentCommentId:
+                  description: Blotato id of an existing top-level, posted comment on the same post to reply to. Replies to replies are not supported.
+                  type: string
+              required:
+              - postId
+              - text
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    description: ID of the social account this comment belongs to.
+                    type: string
+                  authorId:
+                    description: Platform-native id of the comment author.
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                  errorCode:
+                    description: Set only when status is `failed`.
+                    type:
+                    - integer
+                    - 'null'
+                  errorMessage:
+                    description: Set only when status is `failed`.
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                  isAuthor:
+                    description: '`true` if the user''s own connected account authored this comment.'
+                    type: boolean
+                  parentCommentId:
+                    description: Blotato id of the parent comment when this comment is a reply. null for top-level comments.
+                    type:
+                    - string
+                    - 'null'
+                  platform:
+                    type: string
+                    enum:
+                    - facebook
+                    - instagram
+                  platformCommentId:
+                    description: Platform-native id of the comment.
+                    type:
+                    - string
+                    - 'null'
+                  platformPostId:
+                    description: Platform-native id of the parent post being commented on.
+                    type: string
+                  postId:
+                    description: Blotato ID of the post (if published through Blotato).
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                    enum:
+                    - deleted
+                    - failed
+                    - posted
+                    - processing
+                    - queued
+                  text:
+                    type: string
+                required:
+                - accountId
+                - authorId
+                - createdAt
+                - errorCode
+                - errorMessage
+                - id
+                - isAuthor
+                - parentCommentId
+                - platform
+                - platformCommentId
+                - platformPostId
+                - postId
+                - status
+                - text
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Rate limit exceeded
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: postV2Comments
+      x-operation-id-source: derived
+  /v2/comments/{commentId}:
+    get:
+      summary: Get a comment
+      tags:
+      - Comments
+      description: Fetches a single comment by its Blotato ID. The comment may be an inbound reply left by the user's audience on one of their posts, or an outbound comment the user posted through Blotato.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: commentId
+        required: true
+        description: Blotato id of the comment to fetch.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    description: ID of the social account this comment belongs to.
+                    type: string
+                  authorId:
+                    description: Platform-native id of the comment author.
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                  errorCode:
+                    description: Set only when status is `failed`.
+                    type:
+                    - integer
+                    - 'null'
+                  errorMessage:
+                    description: Set only when status is `failed`.
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                  isAuthor:
+                    description: '`true` if the user''s own connected account authored this comment.'
+                    type: boolean
+                  parentCommentId:
+                    description: Blotato id of the parent comment when this comment is a reply. null for top-level comments.
+                    type:
+                    - string
+                    - 'null'
+                  platform:
+                    type: string
+                    enum:
+                    - facebook
+                    - instagram
+                  platformCommentId:
+                    description: Platform-native id of the comment.
+                    type:
+                    - string
+                    - 'null'
+                  platformPostId:
+                    description: Platform-native id of the parent post being commented on.
+                    type: string
+                  postId:
+                    description: Blotato ID of the post (if published through Blotato).
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                    enum:
+                    - deleted
+                    - failed
+                    - posted
+                    - processing
+                    - queued
+                  text:
+                    type: string
+                required:
+                - accountId
+                - authorId
+                - createdAt
+                - errorCode
+                - errorMessage
+                - id
+                - isAuthor
+                - parentCommentId
+                - platform
+                - platformCommentId
+                - platformPostId
+                - postId
+                - status
+                - text
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2CommentsByCommentId
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

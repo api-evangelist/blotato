@@ -1,0 +1,524 @@
+openapi: 3.2.0
+info:
+  title: Blotato Video API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Video
+  description: Endpoints related to video creation and management.
+paths:
+  /v2/videos/{id}:
+    delete:
+      summary: Remove a video by ID
+      tags:
+      - Video
+      description: Deletes a video by its ID. This is used to remove videos that are no longer needed or were created in error.
+      parameters:
+      - schema:
+          format: uuid
+          type: string
+        example: 123e4567-e89b-12d3-a456-426614174000
+        in: path
+        name: id
+        required: true
+        description: Video ID
+      security:
+      - apiKey: []
+      responses:
+        '204':
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: Success
+                type: object
+                properties:
+                  id:
+                    format: uuid
+                    description: Video ID
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                required:
+                - id
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: deleteV2VideosById
+      x-operation-id-source: derived
+  /v2/videos/creations/{id}:
+    get:
+      summary: Get a single video
+      tags:
+      - Video
+      description: Retrieves the video by its ID. This is useful for polling after creating a video programmatically. When error is set, generation has stopped and the status will not change again, even if it is not a final status.
+      parameters:
+      - schema:
+          format: uuid
+          type: string
+        example: 123e4567-e89b-12d3-a456-426614174000
+        in: path
+        name: id
+        required: true
+        description: Video ID
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    description: Video details
+                    example:
+                      id: 123e4567-e89b-12d3-a456-426614174000
+                      status: completed
+                      createdAt: '2026-10-19T18:31:58.392Z'
+                      mediaUrl: https://database.blotato.io/media/12345.mp4
+                    type: object
+                    properties:
+                      id:
+                        format: uuid
+                        description: Video ID
+                        type: string
+                        example: 123e4567-e89b-12d3-a456-426614174000
+                      status:
+                        description: Current status of the video generation process
+                        type: string
+                        enum:
+                        - queueing
+                        - generating-script
+                        - script-ready
+                        - generating-media
+                        - media-ready
+                        - exporting
+                        - done
+                        - creation-from-template-failed
+                        - insufficient-credits
+                        - draft
+                      error:
+                        description: Optional error message if the video failed to generate. Its presence means generation has stopped, so stop polling.
+                        type: string
+                      errorMetadata:
+                        type: object
+                        properties:
+                          creditsRequired:
+                            type: number
+                          creditsRemaining:
+                            type: number
+                          numAiOverlays:
+                            type: number
+                          numDraftOverlays:
+                            type: number
+                      createdAt:
+                        description: Creation timestamp of the video
+                        format: date-time
+                        type: string
+                        example: '2023-10-01T12:00:00Z'
+                      mediaUrl:
+                        description: Public URL of the final exported video media
+                        type:
+                        - string
+                        - 'null'
+                      imageUrls:
+                        description: For slideshow exports, this will contain the images used in the video.
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                    required:
+                    - id
+                    - status
+                    - createdAt
+                    - imageUrls
+                required:
+                - item
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2VideosCreationsById
+      x-operation-id-source: derived
+  /v2/videos/from-templates:
+    post:
+      summary: Create a video from the new template system
+      tags:
+      - Video
+      description: Creates a new video using a template. The template takes an ID and input parameters. You can also provide an optional prompt to fill out the input parameters automatically.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: string
+                inputs: {}
+                prompt:
+                  type: string
+                isDraft:
+                  default: false
+                  type: boolean
+                render:
+                  default: true
+                  type: boolean
+                title:
+                  minLength: 1
+                  type: string
+                useBrandKit:
+                  default: false
+                  type: boolean
+                brandId:
+                  type:
+                  - string
+                  - 'null'
+              required:
+              - templateId
+              - inputs
+              - render
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    type: object
+                    properties:
+                      id:
+                        format: uuid
+                        description: Video ID
+                        type: string
+                        example: 123e4567-e89b-12d3-a456-426614174000
+                      status:
+                        description: Current status of the video generation process
+                        type: string
+                        enum:
+                        - queueing
+                        - generating-script
+                        - script-ready
+                        - generating-media
+                        - media-ready
+                        - exporting
+                        - done
+                        - creation-from-template-failed
+                        - insufficient-credits
+                        - draft
+                    required:
+                    - id
+                    - status
+                required:
+                - item
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: postV2VideosFromTemplates
+      x-operation-id-source: derived
+  /v2/videos/templates:
+    get:
+      summary: List all templates
+      tags:
+      - Video
+      description: List all available video templates along with the specification of their input parameters.
+      parameters:
+      - schema:
+          example: id,title,description,inputs
+          default: id,title,description
+          type: string
+        in: query
+        name: fields
+        required: false
+        description: Comma separated list of fields to include. If provided, only these fields will be included in the response for each template. If omitted, only id, title, and description are included. Id is always included in the response.
+      - schema:
+          example: real estate
+          type: string
+        in: query
+        name: search
+        required: false
+        description: Search regex term to filter templates by title or description. Has no effect if "id" is also provided.
+      - schema:
+          example: /base/v2/tweet-card/9714ae5c-7e6b-4878-be4a-4b1ba5d0cd66/v1
+          type: string
+        in: query
+        name: id
+        required: false
+        description: If provided, only the template with this ID will be returned.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: {}
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2VideosTemplates
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

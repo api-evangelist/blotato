@@ -1,85 +1,845 @@
 openapi: 3.2.0
 info:
   title: Blotato Accounts API
-  description: The Blotato API lets you upload media, publish and schedule posts to social platforms (Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, YouTube), generate AI videos and visuals from templates, and retrieve connected accounts. All requests are authenticated with a blotato-api-key header.
-  termsOfService: https://www.blotato.com/terms
-  contact:
-    name: Blotato Support
-    url: https://help.blotato.com
-  version: '2.0'
+  description: Blotato API documentation
+  version: 2.0.0
 servers:
-- url: https://backend.blotato.com/v2
-  description: Blotato REST API v2
-security:
-- blotatoApiKey: []
+- url: https://backend.blotato.com
+  description: Blotato API Server
 tags:
 - name: Accounts
-  description: User and connected social account lookup.
+  description: Endpoints related to user accounts and social media accounts.
 paths:
-  /users/me:
+  /v2/integrations/oauth2/linkedin/pages:
     get:
-      operationId: getCurrentUser
+      summary: List LinkedIn pages
       tags:
       - Accounts
-      summary: Get current user
-      description: Retrieves information about the authenticated user.
-      responses:
-        '200':
-          description: Current user.
-        '401':
-          description: Missing or invalid API key.
-  /users/me/accounts:
-    get:
-      operationId: listAccounts
-      tags:
-      - Accounts
-      summary: List connected accounts
-      description: Returns the authenticated user's connected social accounts, optionally filtered by platform. Provides the accountId values used when publishing.
+      description: Lists the organization pages the connected LinkedIn account can administer, so the user can choose which to add as posting targets.
       parameters:
-      - name: platform
+      - schema:
+          type: string
         in: query
-        required: false
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Connected accounts.
-        '401':
-          description: Missing or invalid API key.
-  /users/me/accounts/{accountId}/subaccounts:
-    get:
-      operationId: listSubaccounts
-      tags:
-      - Accounts
-      summary: List subaccounts
-      description: Returns subaccounts for an account (for example LinkedIn or Facebook pages) associated with the given accountId.
-      parameters:
-      - name: accountId
-        in: path
+        name: accountId
         required: true
-        schema:
-          type: string
+        description: Blotato account id, returned from /users/me/accounts.
+      security:
+      - apiKey: []
       responses:
         '200':
-          description: Subaccounts.
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: LinkedIn ID of the organization page.
+                          type: string
+                        name:
+                          description: Display name of the organization page.
+                          type: string
+                        isActive:
+                          description: Whether Blotato is already connected to this page.
+                          type: boolean
+                      required:
+                      - id
+                      - name
+                      - isActive
+                required:
+                - items
         '401':
-          description: Missing or invalid API key.
-  /social/pinterest/boards:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2IntegrationsOauth2LinkedinPages
+      x-operation-id-source: derived
+  /v2/social/pinterest/boards:
     get:
-      operationId: listPinterestBoards
+      summary: List Pinterest boards
       tags:
       - Accounts
-      summary: List Pinterest boards
-      description: Lists the Pinterest boards available for a connected account.
+      description: Lists boards owned by a connected Pinterest account. Returns the id and name of each board so callers can pick the boardId required when creating a Pinterest pin via blotato_create_post.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: accountId
+        required: true
+        description: Blotato Pinterest account id, returned from /users/me/accounts.
+      security:
+      - apiKey: []
       responses:
         '200':
-          description: Pinterest boards.
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: Pinterest boards owned by the connected account. Capped at 250 (the Pinterest page_size limit).
+                    type: array
+                    items:
+                      example:
+                        id: '1234567890123456789'
+                        name: Summer Outfits
+                      type: object
+                      properties:
+                        id:
+                          description: Pinterest board id. Pass this as boardId when creating a pin.
+                          type: string
+                        name:
+                          description: Display name of the board on Pinterest.
+                          type: string
+                      required:
+                      - id
+                      - name
+                required:
+                - items
         '401':
-          description: Missing or invalid API key.
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: number
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2SocialPinterestBoards
+      x-operation-id-source: derived
+  /v2/users/me:
+    get:
+      summary: Get current user information
+      tags:
+      - Accounts
+      description: Fetches the current user's information, including subscription status and API key if available.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                description: Current user information
+                example:
+                  id: user_12345
+                  subscriptionStatus: active
+                  apiKey: your-api-key
+                  subscriptionPlan: creator
+                type: object
+                properties:
+                  id:
+                    type: string
+                  subscriptionStatus:
+                    type:
+                    - string
+                    - 'null'
+                  apiKey:
+                    type:
+                    - string
+                    - 'null'
+                  subscriptionPlan:
+                    type: string
+                    enum:
+                    - starter
+                    - creator
+                    - agency
+                required:
+                - id
+                - subscriptionStatus
+                - apiKey
+                - subscriptionPlan
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2UsersMe
+      x-operation-id-source: derived
+  /v2/users/me/usage:
+    get:
+      summary: Get current user usage
+      tags:
+      - Accounts
+      description: Fetches the current user's usage against their plan limits, such as active contacts.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accounts:
+                    description: Number of connected channels counting toward the connected accounts limit.
+                    type: integer
+                  contacts:
+                    description: Number of contacts messaged this month, counting toward the active contacts limit.
+                    type: integer
+                  contactsLimit:
+                    description: Maximum active contacts that can be messaged this month.
+                    anyOf:
+                    - type: integer
+                    - type: string
+                      enum:
+                      - unlimited
+                required:
+                - accounts
+                - contacts
+                - contactsLimit
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2UsersMeUsage
+      x-operation-id-source: derived
+  /v2/users/me/accounts:
+    get:
+      summary: Get current user accounts
+      tags:
+      - Accounts
+      description: Fetches the current user's social media accounts. Optionally filter by platform.
+      parameters:
+      - schema:
+          example: twitter
+          type: string
+          enum:
+          - twitter
+          - instagram
+          - linkedin
+          - facebook
+          - tiktok
+          - pinterest
+          - threads
+          - bluesky
+          - youtube
+          - other
+        in: query
+        name: platform
+        required: false
+        description: Social media platform
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: List of social media accounts
+                    type: array
+                    items:
+                      example:
+                      - id: '12345'
+                        platform: twitter
+                        fullname: John Doe
+                        username: '@johndoe'
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        platform:
+                          description: Social media platform
+                          example: twitter
+                          type: string
+                          enum:
+                          - twitter
+                          - instagram
+                          - linkedin
+                          - facebook
+                          - tiktok
+                          - pinterest
+                          - threads
+                          - bluesky
+                          - youtube
+                          - other
+                        fullname:
+                          type: string
+                        username:
+                          type: string
+                      required:
+                      - id
+                      - platform
+                      - fullname
+                      - username
+                required:
+                - items
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2UsersMeAccounts
+      x-operation-id-source: derived
+  /v2/users/me/accounts/{accountId}/subaccounts:
+    get:
+      summary: Get current user subaccounts
+      tags:
+      - Accounts
+      description: Fetches the current user's subaccounts for a specific account. Subaccounts are typically used for platforms like Facebook where a user can have multiple pages.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: accountId
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      example:
+                        id: facebook_page_12345
+                        accountId: account_67890
+                        name: My Facebook Page
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        accountId:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - id
+                      - accountId
+                      - name
+                required:
+                - items
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Unauthorized access
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2UsersMeAccountsByAccountIdSubaccounts
+      x-operation-id-source: derived
 components:
   securitySchemes:
-    blotatoApiKey:
+    apiKey:
       type: apiKey
-      in: header
       name: blotato-api-key
-      description: API key generated in Blotato Settings > API. Sent in the blotato-api-key header on every request. Keys may include trailing '=' padding that must be preserved.
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here

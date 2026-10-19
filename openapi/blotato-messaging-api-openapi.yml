@@ -1,0 +1,1505 @@
+openapi: 3.2.0
+info:
+  title: Blotato Messaging API
+  description: Blotato API documentation
+  version: 2.0.0
+servers:
+- url: https://backend.blotato.com
+  description: Blotato API Server
+tags:
+- name: Messaging
+  description: Endpoints related to reading and sending direct messages on connected social media accounts.
+paths:
+  /v2/conversations:
+    get:
+      summary: List conversations
+      tags:
+      - Messaging
+      description: Lists the current user's direct-message conversations from their connected social accounts, ordered by last activity time (most recent first). Supports cursor-based pagination and filtering by platform and account.
+      parameters:
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of conversations to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      - schema:
+          type: string
+          enum:
+          - facebook
+          - instagram
+        in: query
+        name: platform
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: accountId
+        required: false
+        description: Filter to conversations belonging to a single connected account.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: List of conversations.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountId:
+                          description: ID of the social account this conversation belongs to.
+                          type: string
+                        createdAt:
+                          type: string
+                        id:
+                          type: string
+                        participants:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                description: Platform-native ID of the participant.
+                                type:
+                                - string
+                                - 'null'
+                              name:
+                                description: Display name of the participant.
+                                type:
+                                - string
+                                - 'null'
+                              profileImageUrl:
+                                type:
+                                - string
+                                - 'null'
+                              username:
+                                description: Platform handle / @username of the participant.
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - id
+                            - name
+                            - profileImageUrl
+                            - username
+                        platform:
+                          type: string
+                          enum:
+                          - facebook
+                          - instagram
+                        updatedAt:
+                          type: string
+                      required:
+                      - accountId
+                      - createdAt
+                      - id
+                      - participants
+                      - platform
+                      - updatedAt
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more conversations.
+                    type: string
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2Conversations
+      x-operation-id-source: derived
+  /v2/conversations/{conversationId}:
+    get:
+      summary: Get a conversation
+      tags:
+      - Messaging
+      description: Fetches a single conversation by id, including participant metadata.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: conversationId
+        required: true
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    description: ID of the social account this conversation belongs to.
+                    type: string
+                  createdAt:
+                    type: string
+                  id:
+                    type: string
+                  participants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: Platform-native ID of the participant.
+                          type:
+                          - string
+                          - 'null'
+                        name:
+                          description: Display name of the participant.
+                          type:
+                          - string
+                          - 'null'
+                        profileImageUrl:
+                          type:
+                          - string
+                          - 'null'
+                        username:
+                          description: Platform handle / @username of the participant.
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - name
+                      - profileImageUrl
+                      - username
+                  platform:
+                    type: string
+                    enum:
+                    - facebook
+                    - instagram
+                  updatedAt:
+                    type: string
+                required:
+                - accountId
+                - createdAt
+                - id
+                - participants
+                - platform
+                - updatedAt
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2ConversationsByConversationId
+      x-operation-id-source: derived
+  /v2/messages:
+    get:
+      summary: List messages
+      tags:
+      - Messaging
+      description: Lists the current user's messages from their connected social accounts, ordered by creation time (most recent first). Supports cursor-based pagination and filtering by platform and conversation.
+      parameters:
+      - schema:
+          minimum: 1
+          maximum: 250
+          default: 50
+          type: integer
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of messages to return. Defaults to 50.
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque cursor returned by a previous call. Pass it to fetch the next page.
+      - schema:
+          type: string
+        in: query
+        name: conversationId
+        required: false
+        description: Filter to messages within a single conversation.
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - facebook
+            - instagram
+        example:
+        - instagram
+        - facebook
+        in: query
+        name: platform
+        required: false
+        description: Filter messages by platform. Pass multiple values to include any of them.
+      - schema:
+          type: string
+        in: query
+        name: accountId
+        required: false
+        description: Filter to messages belonging to a single connected account.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    description: List of messages.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        conversationId:
+                          description: Parent Blotato conversation id.
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                        direction:
+                          type: string
+                          enum:
+                          - incoming
+                          - outgoing
+                        errorCode:
+                          description: Set only when status is `failed`.
+                          type:
+                          - integer
+                          - 'null'
+                        errorMessage:
+                          description: Set only when status is `failed`.
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                        payload:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            attachment:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                  enum:
+                                  - button
+                                buttons:
+                                  minItems: 1
+                                  maxItems: 3
+                                  description: Up to 3 call-to-action buttons attached to the message.
+                                  type: array
+                                  items:
+                                    type: object
+                                    discriminator:
+                                      propertyName: type
+                                    oneOf:
+                                    - type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          enum:
+                                          - web_url
+                                        title:
+                                          minLength: 1
+                                          maxLength: 20
+                                          description: Button label shown to the recipient.
+                                          type: string
+                                        url:
+                                          pattern: ^https://
+                                          description: https URL the button opens when tapped.
+                                          type: string
+                                      required:
+                                      - type
+                                      - title
+                                      - url
+                                    - type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          enum:
+                                          - postback
+                                        title:
+                                          minLength: 1
+                                          maxLength: 20
+                                          description: Button label shown to the recipient.
+                                          type: string
+                                        payload:
+                                          minLength: 1
+                                          maxLength: 1000
+                                          description: Message posted back on tap.
+                                          type: string
+                                      required:
+                                      - type
+                                      - title
+                                      - payload
+                              required:
+                              - type
+                              - buttons
+                            quickReplies:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Chip label shown to the recipient.
+                                    type: string
+                                  payload:
+                                    minLength: 1
+                                    maxLength: 1000
+                                    description: Message replied with on chip selection.
+                                    type: string
+                                required:
+                                - title
+                                - payload
+                            selection:
+                              type: object
+                              properties:
+                                payload:
+                                  type:
+                                  - string
+                                  - 'null'
+                                type:
+                                  type: string
+                                  enum:
+                                  - postback
+                                  - quick-reply
+                              required:
+                              - payload
+                              - type
+                        platform:
+                          type: string
+                          enum:
+                          - facebook
+                          - instagram
+                        recipientId:
+                          type: string
+                        senderId:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                          enum:
+                          - delivered
+                          - failed
+                          - processing
+                          - queued
+                          - sent
+                        text:
+                          type: string
+                      required:
+                      - conversationId
+                      - createdAt
+                      - direction
+                      - errorCode
+                      - errorMessage
+                      - id
+                      - platform
+                      - recipientId
+                      - senderId
+                      - status
+                      - text
+                  cursor:
+                    description: Cursor for the next page. Absent when there are no more messages.
+                    type: string
+                required:
+                - items
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2Messages
+      x-operation-id-source: derived
+    post:
+      summary: Send a message
+      tags:
+      - Messaging
+      description: Sends a direct message to a single recipient on the specified platform.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountId:
+                  description: Blotato id of the connected social account the message is sent from.
+                  type: string
+                target:
+                  type: object
+                  discriminator:
+                    propertyName: targetType
+                  oneOf:
+                  - type: object
+                    properties:
+                      targetType:
+                        description: Send via Facebook.
+                        example: facebook
+                        type: string
+                        enum:
+                        - facebook
+                      pageId:
+                        pattern: ^\d+$
+                        description: ID of the Facebook Page to send from.
+                        example: '123456789'
+                        type: string
+                      attachment:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - button
+                          buttons:
+                            minItems: 1
+                            maxItems: 3
+                            description: Up to 3 call-to-action buttons attached to the message.
+                            type: array
+                            items:
+                              type: object
+                              discriminator:
+                                propertyName: type
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - web_url
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  url:
+                                    pattern: ^https://
+                                    description: https URL the button opens when tapped.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - url
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - postback
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  payload:
+                                    minLength: 1
+                                    maxLength: 1000
+                                    description: Message posted back on tap.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - payload
+                        required:
+                        - type
+                        - buttons
+                      commentId:
+                        description: Blotato comment ID. When set, the message is delivered as a private reply to that comment instead of a direct message.
+                        type: string
+                      quickReplies:
+                        minItems: 1
+                        maxItems: 13
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              minLength: 1
+                              maxLength: 20
+                              description: Chip label shown to the recipient.
+                              type: string
+                            payload:
+                              minLength: 1
+                              maxLength: 1000
+                              description: Message replied with on chip selection.
+                              type: string
+                          required:
+                          - title
+                          - payload
+                      responseType:
+                        type: string
+                        enum:
+                        - RESPONSE
+                        - UPDATE
+                        - MESSAGE_TAG
+                      tag:
+                        description: Required when responseType is MESSAGE_TAG (e.g. HUMAN_AGENT).
+                        type: string
+                    required:
+                    - targetType
+                    - pageId
+                  - type: object
+                    properties:
+                      targetType:
+                        description: Send via Instagram.
+                        example: instagram
+                        type: string
+                        enum:
+                        - instagram
+                      attachment:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - button
+                          buttons:
+                            minItems: 1
+                            maxItems: 3
+                            description: Up to 3 call-to-action buttons attached to the message.
+                            type: array
+                            items:
+                              type: object
+                              discriminator:
+                                propertyName: type
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - web_url
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  url:
+                                    pattern: ^https://
+                                    description: https URL the button opens when tapped.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - url
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - postback
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  payload:
+                                    minLength: 1
+                                    maxLength: 1000
+                                    description: Message posted back on tap.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - payload
+                        required:
+                        - type
+                        - buttons
+                      responseType:
+                        type: string
+                        enum:
+                        - RESPONSE
+                        - UPDATE
+                        - MESSAGE_TAG
+                      commentId:
+                        description: Blotato comment ID. When set, the message is delivered as a private reply to that comment instead of a direct message.
+                        type: string
+                      quickReplies:
+                        minItems: 1
+                        maxItems: 13
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              minLength: 1
+                              maxLength: 20
+                              description: Chip label shown to the recipient.
+                              type: string
+                            payload:
+                              minLength: 1
+                              maxLength: 1000
+                              description: Message replied with on chip selection.
+                              type: string
+                          required:
+                          - title
+                          - payload
+                      tag:
+                        description: Required when responseType is MESSAGE_TAG (e.g. HUMAN_AGENT).
+                        type: string
+                    required:
+                    - targetType
+                recipientId:
+                  description: Platform-native id of the recipient (e.g. Instagram business-scoped user id).
+                  type: string
+                text:
+                  minLength: 1
+                  maxLength: 10000
+                  description: Plain-text message body.
+                  type: string
+              required:
+              - accountId
+              - target
+              - recipientId
+              - text
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversationId:
+                    description: Parent Blotato conversation id.
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                  direction:
+                    type: string
+                    enum:
+                    - incoming
+                    - outgoing
+                  errorCode:
+                    description: Set only when status is `failed`.
+                    type:
+                    - integer
+                    - 'null'
+                  errorMessage:
+                    description: Set only when status is `failed`.
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                  payload:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      attachment:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - button
+                          buttons:
+                            minItems: 1
+                            maxItems: 3
+                            description: Up to 3 call-to-action buttons attached to the message.
+                            type: array
+                            items:
+                              type: object
+                              discriminator:
+                                propertyName: type
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - web_url
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  url:
+                                    pattern: ^https://
+                                    description: https URL the button opens when tapped.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - url
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - postback
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  payload:
+                                    minLength: 1
+                                    maxLength: 1000
+                                    description: Message posted back on tap.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - payload
+                        required:
+                        - type
+                        - buttons
+                      quickReplies:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              minLength: 1
+                              maxLength: 20
+                              description: Chip label shown to the recipient.
+                              type: string
+                            payload:
+                              minLength: 1
+                              maxLength: 1000
+                              description: Message replied with on chip selection.
+                              type: string
+                          required:
+                          - title
+                          - payload
+                      selection:
+                        type: object
+                        properties:
+                          payload:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - postback
+                            - quick-reply
+                        required:
+                        - payload
+                        - type
+                  platform:
+                    type: string
+                    enum:
+                    - facebook
+                    - instagram
+                  recipientId:
+                    type: string
+                  senderId:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                    enum:
+                    - delivered
+                    - failed
+                    - processing
+                    - queued
+                    - sent
+                  text:
+                    type: string
+                required:
+                - conversationId
+                - createdAt
+                - direction
+                - errorCode
+                - errorMessage
+                - id
+                - platform
+                - recipientId
+                - senderId
+                - status
+                - text
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Validation error
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Rate limit exceeded
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: postV2Messages
+      x-operation-id-source: derived
+  /v2/messages/{messageId}:
+    get:
+      summary: Get a message
+      tags:
+      - Messaging
+      description: Fetches a single direct message by its Blotato ID. The message may be an inbound message received from a contact, or an outbound message the user sent through Blotato.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: messageId
+        required: true
+        description: Blotato id of the message to fetch.
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversationId:
+                    description: Parent Blotato conversation id.
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                  direction:
+                    type: string
+                    enum:
+                    - incoming
+                    - outgoing
+                  errorCode:
+                    description: Set only when status is `failed`.
+                    type:
+                    - integer
+                    - 'null'
+                  errorMessage:
+                    description: Set only when status is `failed`.
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                  payload:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      attachment:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - button
+                          buttons:
+                            minItems: 1
+                            maxItems: 3
+                            description: Up to 3 call-to-action buttons attached to the message.
+                            type: array
+                            items:
+                              type: object
+                              discriminator:
+                                propertyName: type
+                              oneOf:
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - web_url
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  url:
+                                    pattern: ^https://
+                                    description: https URL the button opens when tapped.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - url
+                              - type: object
+                                properties:
+                                  type:
+                                    type: string
+                                    enum:
+                                    - postback
+                                  title:
+                                    minLength: 1
+                                    maxLength: 20
+                                    description: Button label shown to the recipient.
+                                    type: string
+                                  payload:
+                                    minLength: 1
+                                    maxLength: 1000
+                                    description: Message posted back on tap.
+                                    type: string
+                                required:
+                                - type
+                                - title
+                                - payload
+                        required:
+                        - type
+                        - buttons
+                      quickReplies:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              minLength: 1
+                              maxLength: 20
+                              description: Chip label shown to the recipient.
+                              type: string
+                            payload:
+                              minLength: 1
+                              maxLength: 1000
+                              description: Message replied with on chip selection.
+                              type: string
+                          required:
+                          - title
+                          - payload
+                      selection:
+                        type: object
+                        properties:
+                          payload:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - postback
+                            - quick-reply
+                        required:
+                        - payload
+                        - type
+                  platform:
+                    type: string
+                    enum:
+                    - facebook
+                    - instagram
+                  recipientId:
+                    type: string
+                  senderId:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                    enum:
+                    - delivered
+                    - failed
+                    - processing
+                    - queued
+                    - sent
+                  text:
+                    type: string
+                required:
+                - conversationId
+                - createdAt
+                - direction
+                - errorCode
+                - errorMessage
+                - id
+                - platform
+                - recipientId
+                - senderId
+                - status
+                - text
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Forbidden access
+                    type: string
+                  subscriptionStatus:
+                    description: Current subscription plan status
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: Resource not found
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                description: Server error
+                type: object
+                properties:
+                  code:
+                    type: number
+                  reqId:
+                    description: Request ID for tracking
+                    type: string
+                  message:
+                    description: An error occurred
+                    type: string
+                  action:
+                    description: Action to take to resolve the error
+                    type: string
+                  details:
+                    description: Additional structured details about the error
+                    type: object
+                    additionalProperties: {}
+                required:
+                - message
+      operationId: getV2MessagesByMessageId
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: blotato-api-key
+      in: header
+externalDocs:
+  url: https://help.blotato.com
+  description: Find more info here
