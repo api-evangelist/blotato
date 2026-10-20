@@ -19,7 +19,19 @@
     registered_name: com.blotato/mcp
     register_id: com.blotato/mcp
     detected_by: sweep-agent-tools.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
+  status: not-a-workflow
+  arazzo: null
+- slug: blotato-n8n-n8n-community
+  label: n8n (n8n-community)
+  partner: n8n
+  partner_name: n8n (n8n-community)
+  type: marketplace
+  marketplace: n8n-community
+  channel: partner-built
+  evidence: https://www.npmjs.com/package/@blotato/n8n-nodes-blotato
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
 - slug: blotato-n8n
@@ -56,7 +68,7 @@
   type: marketplace
   marketplace: pipedream-components
   channel: open-source-node
-  evidence: https://github.com/PipedreamHQ/pipedream/tree/94800dd6de6640b942c65ea7ee655f71ac56d438/components/blotato
+  evidence: https://github.com/PipedreamHQ/pipedream/tree/d5872355ef27b4efa769f05352f2820c299a456e/components/blotato
   source: edge
   relationship: ipaas-bridge
   contract_reference:
