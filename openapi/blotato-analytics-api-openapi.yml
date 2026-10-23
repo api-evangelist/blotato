@@ -1744,3 +1744,9 @@ components:
 externalDocs:
   url: https://help.blotato.com
   description: Find more info here
+x-provenance:
+  method: harvested
+  publisher: Blotato
+  source: https://backend.blotato.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
