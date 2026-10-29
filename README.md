@@ -1,4 +1,4 @@
-# Blotato (blotato)
+# Blotato
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,119 +66,132 @@
 
 Blotato is an AI content-creation and social-media publishing platform. Its REST API lets automation and AI-agent builders upload media, publish posts to many platforms (TikTok, Instagram, YouTube, X/Twitter, LinkedIn, Facebook, Threads, Bluesky, Pinterest), generate AI videos and visuals from templates, and track publishing status, with an authenticated MCP server for AI agents.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/blotato/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/blotato/refs/heads/main/apis.yml)
+**Areas:** Social Media · Publishing · AI content · Automation · Content Creation
 
-## Tags
+## Blotato on APIs.io
 
-- Social Media
-- Publishing
-- AI Content
-- Automation
-- Content Creation
+Everything profiled for Blotato is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/blotato/](https://apis.io/providers/blotato/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (4)
 
-- **Created:** 2026-06-25
-- **Modified:** 2026-06-25
+- [Blotato Accounts API](https://apis.io/apis/blotato/blotato-accounts-api/) — User and connected social account lookup.
+- [Blotato Media API](https://apis.io/apis/blotato/blotato-media-api/) — Upload media for use in posts.
+- [Blotato Posts API](https://apis.io/apis/blotato/blotato-posts-api/) — Publish, schedule, and track posts.
+- [Blotato Visuals API](https://apis.io/apis/blotato/blotato-visuals-api/) — AI video and visual generation from templates.
 
-## APIs
+### Published properties
 
-### Blotato Media Upload API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Uploads media to Blotato by passing a publicly accessible URL or base64-encoded image data and returns a hosted media URL to use when publishing posts. Supports files up to 200MB, with a presigned-upload flow for local files.
+#### MCP servers (1)
 
-- **Human URL:** [https://help.blotato.com/api/api-reference/upload-media-v2-media](https://help.blotato.com/api/api-reference/upload-media-v2-media)
-- **Base URL:** `https://backend.blotato.com/v2`
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags
+- [blotato](https://apis.io/servers/blotato/blotato/)
 
-- Media
-- Upload
-- Images
-- Video
+#### Agentic access (1)
 
-#### Properties
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [Documentation](https://help.blotato.com/api/api-reference/upload-media-v2-media)
-- [API Reference](https://help.blotato.com/api/api-reference/upload-media-v2-media)
-- [OpenAPI](openapi/blotato-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/blotato.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/blotato.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Blotato Agentic Access](https://apis.io/agentic-access/blotato/blotato-agentic-access/)
 
-### Blotato Posts Publishing API
+#### Collections (5)
 
-Publishes or schedules posts to Twitter/X, Instagram, LinkedIn, Facebook, TikTok, Pinterest, Threads, Bluesky, and YouTube with text, media, and platform-specific options, returning a postSubmissionId whose status is polled via a follow-up request.
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://help.blotato.com/api/api-reference/publish-post](https://help.blotato.com/api/api-reference/publish-post)
-- **Base URL:** `https://backend.blotato.com/v2`
+- [Blotato API](https://apis.io/collections/blotato/open-blotato/)
+- [Blotato Accounts API](https://apis.io/collections/blotato/open-blotato-accounts-api/)
+- [Blotato Accounts Media API](https://apis.io/collections/blotato/open-blotato-media-api/)
+- [Blotato Accounts Posts API](https://apis.io/collections/blotato/open-blotato-posts-api/)
+- [Blotato Accounts Visuals API](https://apis.io/collections/blotato/open-blotato-visuals-api/)
 
-#### Tags
+#### Security (2)
 
-- Posts
-- Publishing
-- Social Media
-- Scheduling
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Properties
+- [Blotato Authentication](https://apis.io/security/blotato/blotato-authentication/)
+- [Blotato Domain Security](https://apis.io/security/blotato/blotato-domain-security/)
 
-- [Documentation](https://help.blotato.com/api/api-reference/publish-post)
-- [API Reference](https://help.blotato.com/api/api-reference/publish-post)
-- [OpenAPI](openapi/blotato-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/blotato.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/blotato.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Plans and pricing (2)
 
-### Blotato AI Content API
+Published plans, tiers and prices.
 
-Generates AI videos and visuals from templates - list available templates, create a video or image creation from a template plus inputs, and poll the creation until it is done to retrieve the resulting media or image URLs.
+- [Blotato Plans Pricing](https://apis.io/plans/blotato/blotato-plans-pricing/)
+- [Blotato Price Estimates](https://apis.io/plans/blotato/blotato-price-estimates/)
 
-- **Human URL:** [https://help.blotato.com/api/start](https://help.blotato.com/api/start)
-- **Base URL:** `https://backend.blotato.com/v2`
+#### Rate limits (1)
 
-#### Tags
+Published request limits.
 
-- AI Content
-- Video
-- Visuals
-- Templates
+- [Blotato Rate Limits](https://apis.io/rate-limits/blotato/blotato-rate-limits/)
 
-#### Properties
+#### FinOps (1)
 
-- [Documentation](https://help.blotato.com/api/start)
-- [OpenAPI](openapi/blotato-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/blotato.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/blotato.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+What the API costs to run, by operation.
 
-### Blotato Accounts API
+- [Blotato Finops](https://apis.io/finops/blotato/blotato-finops/)
 
-Retrieves the current user and their connected social accounts - returning the accountId values (and LinkedIn/Facebook subaccounts and Pinterest boards) required when publishing posts.
+## Where to find this API
 
-- **Human URL:** [https://help.blotato.com/api/start](https://help.blotato.com/api/start)
-- **Base URL:** `https://backend.blotato.com/v2`
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-#### Tags
-
-- Accounts
-- Users
-- Connections
-
-#### Properties
-
-- [Documentation](https://help.blotato.com/api/start)
-- [OpenAPI](openapi/blotato-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/blotato.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/blotato.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/Blotato-Inc)
-- [LinkedIn](https://www.linkedin.com/company/blotato)
 - [Website](https://www.blotato.com/)
 - [Documentation](https://help.blotato.com/api/start)
-- [Plans](plans/blotato-plans-pricing.yml)
-- [Rate Limits](rate-limits/blotato-rate-limits.yml)
-- [Fin Ops](finops/blotato-finops.yml)
+- [Pricing](https://www.blotato.com/pricing)
+- [Blog](https://www.blotato.com/blog)
+- [GitHub](https://github.com/Blotato-Inc)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 37.2** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 50.2 |
+| Contract governance | 0.0 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 42.1 |
+
+**Agent readiness 33.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/blotato/](https://apis.io/providers/blotato/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Blotato: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/blotato/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
